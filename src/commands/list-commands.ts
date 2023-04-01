@@ -1,8 +1,5 @@
-import { SYSTEM_PROGRAMMING_PROMPT_EXPECTED_RESPONSE } from "../constants";
-import * as openai from 'openai';
 // @ts-ignore
 import { getBrief } from "os-info";
-import { Api } from "../Api";
 import { ChatSession } from "../ChatSession";
 
 export const SYSTEM_PROGRAMMING_PROMPT = `
@@ -54,39 +51,41 @@ If you understand, please reply only with the word "yes".
 `;
 
 export async function listCommands(objective: string) {
-    console.log("Waking up sidekick...");
+  console.log("Waking up sidekick...");
 
-    const chatSession = new ChatSession();
-    await chatSession.programChat(SYSTEM_PROGRAMMING_PROMPT);
+  const chatSession = new ChatSession();
+  await chatSession.programChat(SYSTEM_PROGRAMMING_PROMPT);
 
-    let additionalInfo = "";
-    additionalInfo += `Operating System: ${getBrief().Platform}\n`;
-    additionalInfo += `Present Working Directory: ${process.cwd()}\n`;
-    chatSession.chatAsOtherRole(`This is my objective:\n${objective}\n\n${additionalInfo}Please reply in the format previously specified.`)
+  let additionalInfo = "";
+  additionalInfo += `Operating System: ${getBrief().Platform}\n`;
+  additionalInfo += `Present Working Directory: ${process.cwd()}\n`;
+  chatSession.chatAsOtherRole(
+    `This is my objective:\n${objective}\n\n${additionalInfo}Please reply in the format previously specified.`
+  );
 
-    console.log("Let me think...");
+  console.log("Let me think...");
 
-    const chatgptResponse = await chatSession.executeSession();
+  const chatgptResponse = await chatSession.executeSession();
 
-    let commands =
+  let commands =
     // @ts-ignore
-      chatgptResponse.data.choices[0].message.content.split("\n");
+    chatgptResponse.data.choices[0].message.content.split("\n");
 
-    // find the index of the header
-    let headerIndex = -1;
-    const header = "commands:";
-    headerIndex = commands.findIndex((command: string) => {
-      return command.toLowerCase().trim() === header;
-    });
-    if (headerIndex === -1) {
-      console.error(`Unable to find header "${header}"`);
-      console.log("ChatGPT response: ");
-      console.log(JSON.stringify(chatgptResponse.data));
-      process.exit(1);
-    }
-    commands = commands.slice(headerIndex + 1);
-    console.log(`Okay, here's how you could '${objective}':\n`);
+  // find the index of the header
+  let headerIndex = -1;
+  const header = "commands:";
+  headerIndex = commands.findIndex((command: string) => {
+    return command.toLowerCase().trim() === header;
+  });
+  if (headerIndex === -1) {
     commands.forEach((command: string) => {
       console.log(`    ${command}`);
     });
+    process.exit(1);
+  }
+  commands = commands.slice(headerIndex + 1);
+  console.log(`Okay, here's how you could '${objective}':\n`);
+  commands.forEach((command: string) => {
+    console.log(`    ${command}`);
+  });
 }
