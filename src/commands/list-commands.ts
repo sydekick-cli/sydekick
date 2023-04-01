@@ -1,6 +1,8 @@
 // @ts-ignore
 import { getBrief } from "os-info";
 import { ChatSession } from "../ChatSession";
+import { Executor } from "../Executor";
+import { Prompt } from "../Prompt";
 
 export const SYSTEM_PROGRAMMING_PROMPT = `
 You are a helpful assistant that suggests a list of shell commands the user can execute based on their objective.
@@ -50,7 +52,7 @@ Do not forget to include sources please.
 If you understand, please reply only with the word "yes".
 `;
 
-export async function listCommands(objective: string) {
+export async function listCommands(objective: string, execute?: boolean) {
   console.log("Waking up sidekick...");
 
   const chatSession = new ChatSession();
@@ -88,4 +90,30 @@ export async function listCommands(objective: string) {
   commands.forEach((command: string) => {
     console.log(`    ${command}`);
   });
+
+  if (execute === undefined) {
+    // ask the user if they want to execute the commands
+    const result = await Prompt.prompt("Would you like to execute the commands? (y/n) ", "n");
+    if (result === "y") {
+      execute = true;
+    }
+  }
+
+  if (execute) {
+    await executeCommands(commands);
+  }
+}
+
+async function executeCommands(commands: string[]) {
+  console.log("Executing commands...");
+
+  for (const command of commands) {
+    const executor = new Executor(command);
+    const result = await executor.execute();
+    
+    if (result.exitCode !== 0) {
+      console.error(`Failed to execute command: ${command}`);
+      process.exit(result.exitCode);
+    }
+  }
 }

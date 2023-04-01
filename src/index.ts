@@ -14,12 +14,14 @@ import { explain } from "./commands/explain";
 const program = new Command();
 
 program
-.description("Assists with CLI commands using ChatGPT")
+  .description("Assists with CLI commands using ChatGPT")
   .version(version)
   .command("list-commands <objective>")
   .description("Lists commands to complete the objective")
-  .action(async (objective: string) => {
-    await listCommands(objective);
+  .option("-e, --execute", "Execute the commands")
+  .action(async (objective, options) => {
+    const execute = options.execute;
+    await listCommands(objective, execute);
   });
 
 program
