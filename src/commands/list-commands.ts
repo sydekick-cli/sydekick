@@ -1,6 +1,8 @@
 // @ts-ignore
 import { getBrief } from "os-info";
 import { ChatSession } from "../ChatSession";
+import { Executor } from "../Executor";
+import { Prompt } from "../Prompt";
 
 export const SYSTEM_PROGRAMMING_PROMPT = `
 You are a helpful assistant that suggests a list of shell commands the user can execute based on their objective.
@@ -40,6 +42,7 @@ command 3
 #   ...
 ...
 
+If you determine that the resulting commands will also require files to be created, please generate the required commands to create the files.
 Please ensure that comments are explaining the purpose of the command that follows and are prefixed with a #.
 Also please ensure that there are no special prefixes added to the commands such as item indicators or line numbers.
 Also please ensure to append notes you have to the end of the response prepended with a #. Notes are not required but they are extremely helpful to the user and are highly recommended. Notes must be prepended with a #.
@@ -50,7 +53,7 @@ Do not forget to include sources please.
 If you understand, please reply only with the word "yes".
 `;
 
-export async function listCommands(objective: string) {
+export async function listCommands(objective: string, execute?: boolean) {
   console.log("Waking up sidekick...");
 
   const chatSession = new ChatSession();
@@ -88,4 +91,30 @@ export async function listCommands(objective: string) {
   commands.forEach((command: string) => {
     console.log(`    ${command}`);
   });
+
+  if (execute === undefined) {
+    // ask the user if they want to execute the commands
+    const result = await Prompt.prompt("Would you like to execute the commands? (y/n) ", "n");
+    if (result === "y") {
+      execute = true;
+    }
+  }
+
+  if (execute) {
+    await executeCommands(commands);
+  }
+}
+
+async function executeCommands(commands: string[]) {
+  console.log("Executing commands...");
+
+  for (const command of commands) {
+    const executor = new Executor(command);
+    const result = await executor.execute();
+    
+    if (result.exitCode !== 0) {
+      console.error(`Failed to execute command: ${command}`);
+      process.exit(result.exitCode);
+    }
+  }
 }
