@@ -2,10 +2,13 @@
   "name": "chatgpt-sidekick",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "./dist/src/index.js",
   "bin": {
-    "sidekick": "dist/index.js"
+    "sidekick": "./dist/src/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w",
@@ -16,14 +19,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "better-sqlite3": "^8.2.0",
     "commander": "^10.0.0",
     "dotenv": "^16.0.3",
     "openai": "^3.2.1",
     "os-info": "^1.0.0"
   },
   "devDependencies": {
-    "@types/commander": "^2.12.2",
-    "@types/dotenv": "^8.2.0",
+    "@types/better-sqlite3": "^7.6.3",
     "@types/node": "^18.15.11",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.3"
