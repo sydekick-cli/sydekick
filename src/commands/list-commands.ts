@@ -42,6 +42,7 @@ command 3
 #   ...
 ...
 
+If you determine that the resulting commands will also require files to be created, please generate the required commands to create the files.
 Please ensure that comments are explaining the purpose of the command that follows and are prefixed with a #.
 Also please ensure that there are no special prefixes added to the commands such as item indicators or line numbers.
 Also please ensure to append notes you have to the end of the response prepended with a #. Notes are not required but they are extremely helpful to the user and are highly recommended. Notes must be prepended with a #.
