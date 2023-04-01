@@ -12,20 +12,19 @@ A Node.js command-line application that uses OpenAI's GPT-3 API to generate shel
 ## Usage
 
 ```shell
-Usage: sidekick [options] <objective>
+Usage: sidekick [options] [command]
 
 Assists with CLI commands using ChatGPT
 
 Options:
-  -V, --version  output the version number
-  -h, --help     display help for command
+  -V, --version              output the version number
+  -h, --help                 display help for command
+
+Commands:
+  list-commands <objective>  Lists commands to complete the objective
+  explain <command>          Explains a command in plain english
+  help [command]             display help for command
 ```
-
-`<objective>` is a string that describes the user's objective. It may contain whitespace.
-
-The program will prompt the user to provide a description of the steps required to achieve the objective. It will then generate shell commands using OpenAI's GPT-3 API and output them to the console.
-
-If the GPT-3 API is unable to generate commands, the program will output "Sorry, I am not sure how to help with that." to the console.
 
 ## License
 
