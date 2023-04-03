@@ -2,9 +2,10 @@
   "name": "chatgpt-sidekick",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/src/index.js",
+  "type": "module",
+  "main": "./dist/index.js",
   "bin": {
-    "sidekick": "./dist/src/index.js"
+    "sidekick": "./dist/index.js"
   },
   "files": [
     "dist"
@@ -23,11 +24,14 @@
     "better-sqlite3": "^8.2.0",
     "commander": "^10.0.0",
     "dotenv": "^16.0.3",
+    "inquirer": "^9.1.5",
+    "keytar": "^7.9.0",
     "openai": "^3.2.1",
     "os-info": "^1.0.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.3",
+    "@types/inquirer": "^9.0.3",
     "@types/node": "^18.15.11",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",

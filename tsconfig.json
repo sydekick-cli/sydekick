@@ -1,14 +1,11 @@
 {
     "compilerOptions": {
-      "target": "ES5",
-      "module": "commonjs",
+      "target": "ES6",
+      "module": "ES2020",
       "esModuleInterop": true,
       "sourceMap": true,
       "outDir": "dist",
-      "rootDirs": [
-        ".",
-        "src"
-      ],
+      "rootDir": "src",
       "moduleResolution": "node16",
       "resolveJsonModule": true,
       "declaration": true,
@@ -16,12 +13,12 @@
       "strict": true
     },
     "include": [
-      "src/**/*",
-      "package.json"
+      "src/**/*"
     ],
     "exclude": [
       "node_modules",
-      "dist"
+      "dist",
+      "*.cjs"
     ]
   }
   
