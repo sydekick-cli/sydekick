@@ -12,6 +12,7 @@ import { listCommands } from "./commands/list-commands";
 import { explain } from "./commands/explain";
 import { genCode } from "./commands/gen-code";
 import { chat } from "./commands/chat";
+import { genImage } from "./commands/gen-image";
 
 const program = new Command();
 program
@@ -56,6 +57,23 @@ program
       language,
       editableReferenceFiles,
       referenceFiles,
+    });
+  });
+
+program
+  .command("gen-image <prompt> [destfile]")
+  .description(
+    "Generates an image to complete the prompt. If destfile is not specified then you will be prompted for the name."
+  )
+  .option(
+    "-s, --size <size>",
+    "Size of the image to generate. Valid options are 256x256, 512x512 or 1024x1024"
+  )
+  .action(async (prompt: string, destfile: string | undefined, options) => {
+    await genImage({
+      prompt,
+      destfile,
+      size: options.size,
     });
   });
 
