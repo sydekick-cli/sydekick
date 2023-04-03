@@ -18,11 +18,11 @@ export async function explain(command: string) {
   await chatSession.programChat(SYSTEM_PROGRAMMING_PROMPT);
 
   console.log("Let me think...");
-  chatSession.chatAsOtherRole(command);
+  chatSession.chatAsUser(command);
   const response = await chatSession.executeSession();
   const responseContent =
     // @ts-ignore
     response.data.choices[0].message.content;
-  
+
   console.log(responseContent);
 }

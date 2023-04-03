@@ -62,7 +62,7 @@ export async function listCommands(objective: string, execute?: boolean) {
   let additionalInfo = "";
   additionalInfo += `Operating System: ${getBrief().Platform}\n`;
   additionalInfo += `Present Working Directory: ${process.cwd()}\n`;
-  chatSession.chatAsOtherRole(
+  chatSession.chatAsUser(
     `This is my objective:\n${objective}\n\n${additionalInfo}Please reply in the format previously specified.`
   );
 
@@ -111,7 +111,7 @@ async function executeCommands(commands: string[]) {
   for (const command of commands) {
     const executor = new Executor(command);
     const result = await executor.execute();
-    
+
     if (result.exitCode !== 0) {
       console.error(`Failed to execute command: ${command}`);
       process.exit(result.exitCode);

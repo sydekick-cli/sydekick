@@ -1,25 +1,38 @@
-import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, OpenAIApi } from "openai";
+import {
+  ChatCompletionRequestMessage,
+  ChatCompletionRequestMessageRoleEnum,
+  OpenAIApi,
+} from "openai";
 import { Api } from "./Api";
 import { SYSTEM_PROGRAMMING_PROMPT_EXPECTED_RESPONSE } from "./constants";
 
 export class ChatSession {
   private readonly _chatHistory: ChatCompletionRequestMessage[] = [];
 
-  constructor(private readonly _otherRole: ChatCompletionRequestMessageRoleEnum = "user") {}
+  public get messages() {
+    return this._chatHistory;
+  }
 
-    public chatAsOtherRole(prompt: string) {
-        this._chatHistory.push({
-            role: this._otherRole,
-            content: prompt,
-        });
-    }
+  public chatAsAssistant(prompt: string) {
+    this._chatHistory.push({
+      role: "assistant",
+      content: prompt,
+    });
+  }
 
-    public chatAsSystem(prompt: string) {
-        this._chatHistory.push({
-            role: "system",
-            content: prompt,
-        });
-    }
+  public chatAsUser(prompt: string) {
+    this._chatHistory.push({
+      role: "user",
+      content: prompt,
+    });
+  }
+
+  public chatAsSystem(prompt: string) {
+    this._chatHistory.push({
+      role: "system",
+      content: prompt,
+    });
+  }
 
   public async programChat(prompt: string) {
     this._chatHistory.push({
@@ -27,17 +40,14 @@ export class ChatSession {
       content: prompt,
     });
 
-    let programmingResponse: Awaited<
-      ReturnType<OpenAIApi["createChatCompletion"]>
-    > = await this.executeSession();
+    let programmingResponse: Awaited<ReturnType<OpenAIApi["createChatCompletion"]>> =
+      await this.executeSession();
 
     // ensure the response is "yes"
     const programmingResponseContent =
       // @ts-ignore
       programmingResponse.data.choices[0].message.content;
-    if (
-      !SYSTEM_PROGRAMMING_PROMPT_EXPECTED_RESPONSE.test(programmingResponseContent)
-    ) {
+    if (!SYSTEM_PROGRAMMING_PROMPT_EXPECTED_RESPONSE.test(programmingResponseContent)) {
       console.error(
         `Expected the response to be a variation of "yes" but got "${programmingResponseContent}"`
       );
@@ -51,9 +61,7 @@ export class ChatSession {
   }
 
   public async executeSession() {
-    let response: Awaited<
-      ReturnType<OpenAIApi["createChatCompletion"]>
-    >;
+    let response: Awaited<ReturnType<OpenAIApi["createChatCompletion"]>>;
     try {
       response = await Api.instance.createChatCompletion({
         model: "gpt-3.5-turbo",
