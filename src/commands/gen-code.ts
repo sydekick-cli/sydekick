@@ -1,6 +1,8 @@
+import path from "path";
 import { ChatSession } from "../ChatSession";
 import { Prompt } from "../Prompt";
-import { readFile } from "fs/promises";
+import { readFile, writeFile } from "fs/promises";
+import { existsSync } from "fs";
 
 export const SYSTEM_PROGRAMMING_PROMPT = `
 You are a helpful programmer who wants to help the user to solve a problem by writing a program.
@@ -12,9 +14,13 @@ The user may also specify a destination file. If they do, you attempt to make al
 You are allowed to use any resources you would like to solve the problem. You may use the internet, books, or any other resources you would like. You are also allow to ask the user questions if you need more information to solve the problem.
 You must also ensure that your code is not breaching any copyright laws or licenses. This is a must.
 You are also strongly encouraged to comment your code to explain your thought process and how you solved the problem. This is helpful for the user to understand how you solved the problem and to learn from your code.
+If the language you are using is strongly typed, you should also ensure that your code compiles and is free of type errors. You should also ensure to provide as much type information as possible.
+If you are able to write tests for your code, you should do so and include them in your response. You should also ensure that your tests pass.
 
-If you need to ask the user a question, do so in the following format:
+If you need more information from the user or if you need to ask the user a question, do so in the following format:
 Q: <question>
+
+where <question> is the question you would like to ask the user. You must follow this format for asking questions exactly, otherwise the user will not understand that you are asking a question.
 
 If you have all the information you need to solve the problem, you should write the code to solve the problem and respond with the following format described by the sections below:
     <new files>
@@ -86,80 +92,259 @@ If you understand your instructions, please reply with the word "yes".
 `;
 
 export type GenCodeOptions = {
-    objective: string;
-    language?: string;
-    destfile?: string;
-    editableReferenceFiles?: string[];
-    referenceFiles?: string[];
+  objective: string;
+  language?: string;
+  destfile?: string;
+  directory?: string;
+  editableReferenceFiles?: string[];
+  referenceFiles?: string[];
 };
 
 export async function genCode(options: GenCodeOptions) {
-    let { objective, destfile, language, editableReferenceFiles, referenceFiles } = options;
-    const editableFiles = await readFiles(editableReferenceFiles || []);
-    const nonEditableFiles = await readFiles(referenceFiles || []);
+  let { objective, destfile, directory, language, editableReferenceFiles, referenceFiles } =
+    options;
+  const editableFiles = await readFiles(editableReferenceFiles || []);
+  const nonEditableFiles = await readFiles(referenceFiles || []);
 
-    const chatSession = new ChatSession();
-    await chatSession.programChat(SYSTEM_PROGRAMMING_PROMPT);
+  const chatSession = new ChatSession();
+  await chatSession.programChat(SYSTEM_PROGRAMMING_PROMPT);
 
-    let userMessage = `I am trying to solve the following problem:\n${objective}\n\n`;
-    if (language) {
-        userMessage += `I would like to use ${language} to solve this problem.\n\n`;
+  let userMessage = `I am trying to solve the following problem:\n${objective}\n\n`;
+  if (language) {
+    userMessage += `I would like to use ${language} to solve this problem.\n\n`;
+  }
+  if (destfile) {
+    userMessage += `I would like to write the code to solve this problem to the file '${destfile}'.\n\n`;
+  }
+  if (editableFiles.length > 0) {
+    userMessage += `I have the following editable reference files:\n`;
+    for (const file of editableFiles) {
+      userMessage += `${file.path}\n\`\`\`\n${file.contents}\n\`\`\`\n`;
     }
-    if (destfile) {
-        userMessage += `I would like to write the code to solve this problem to the file '${destfile}'.\n\n`;
+    userMessage += `\n`;
+  }
+  if (nonEditableFiles.length > 0) {
+    userMessage += `I have the following non-editable reference files:\n`;
+    for (const file of nonEditableFiles) {
+      userMessage += `${file.path}\n\`\`\`\n${file.contents}\n\`\`\`\n`;
     }
-    if (editableFiles.length > 0) {
-        userMessage += `I have the following editable reference files:\n`;
-        for (const file of editableFiles) {
-            userMessage += `${file.path}\n\`\`\`\n${file.contents}\n\`\`\`\n`;
-        }
-        userMessage += `\n`;
-    }
-    if (nonEditableFiles.length > 0) {
-        userMessage += `I have the following non-editable reference files:\n`;
-        for (const file of nonEditableFiles) {
-            userMessage += `${file.path}\n\`\`\`\n${file.contents}\n\`\`\`\n`;
-        }
-        userMessage += `\n`;
-    }
-    userMessage += "Please only respond in one of the formats initially described. If you do not, I will not be able to understand your response.\n\n";
-    chatSession.chatAsOtherRole(userMessage);
-    // console.log(chatSession);
+    userMessage += `\n`;
+  }
+  userMessage +=
+    "Please only respond in one of the formats initially described. If you do not, I will not be able to understand your response.\n\n";
+  chatSession.chatAsUser(userMessage);
 
-    let finished = false;
-    while (!finished) {
-        const response = await chatSession.executeSession();
-        console.log(response);
-        if (response.data.choices[0].message?.content.toLowerCase().startsWith("q:")) {
-            const question = response.data.choices[0].message?.content.slice(2).trim();
-            console.log(question);
-            const uResponse = await userResponse(" > ");
-            chatSession.chatAsOtherRole(uResponse);
-        } else if (response.data.choices[0].message?.content.toLowerCase().startsWith("sorry")) {
-            console.error(response.data.choices[0].message?.content);
-            process.exit(1);
-        } else {
-            // TODO: parse response
-            console.log(response.data.choices[0].message?.content);
-            finished = true;
-        }
+  let finished = false;
+  while (!finished) {
+    const response = await chatSession.executeSession();
+    if (response.data.choices[0].message?.content.toLowerCase().startsWith("q:")) {
+      const question = response.data.choices[0].message?.content.slice(2).trim();
+      console.log(question);
+      const uResponse = await userResponse(" > ");
+      chatSession.chatAsUser(uResponse);
+    } else if (response.data.choices[0].message?.content.toLowerCase().startsWith("sorry")) {
+      console.error(response.data.choices[0].message?.content);
+      process.exit(1);
+    } else {
+      const responseContent = response.data.choices[0].message?.content;
+      console.log(responseContent);
+      if (!responseContent) {
+        console.error("No response content.");
+        process.exit(1);
+      }
+      console.log("\n\n");
+
+      const parsedResponse = parseResponse(responseContent);
+      await acceptOrRejectResponse(parsedResponse, directory);
+
+      finished = true;
     }
+  }
+}
+
+async function acceptOrRejectResponse(parsedResponse: ParsedResponse, directory?: string) {
+  console.log("This is the solution I came up with.)");
+  console.log("New files:", parsedResponse.newFiles);
+  console.log("Non-editable reference files:", parsedResponse.nonEditableReferenceFiles);
+  console.log("Editable reference files:", parsedResponse.editableReferenceFiles);
+  console.log("Commands to run:", parsedResponse.commands);
+  console.log("Notes:", parsedResponse.notes);
+  const response = await userResponse("Is this solution acceptable? (y/n) > ");
+  if (response === "n") {
+    process.exit(1);
+  }
+
+  const newFileEntries = Object.entries(parsedResponse.newFiles);
+  await acceptOrRejectFiles(newFileEntries);
+
+  const editableReferenceFileEntries = Object.entries(parsedResponse.editableReferenceFiles);
+  await acceptOrRejectFiles(editableReferenceFileEntries);
+
+  console.log("Run these commands to get started:");
+  for (const command of parsedResponse.commands) {
+    console.log(command);
+  }
+}
+
+async function acceptOrRejectFiles(
+  newFileEntries: [string, string][],
+  create = true,
+  directory?: string
+) {
+  for (let [filePath, contents] of newFileEntries) {
+    if (directory) {
+      filePath = path.join(directory, filePath);
+    }
+    const response = await userResponse(
+      `${create ? "Create" : "Update"} file '${filePath}'? (y/n) > `
+    );
+    if (response === "n") {
+      continue;
+    }
+
+    if (directory && !existsSync(directory)) {
+      // create the directory
+      try {
+      } catch (error) {
+        console.error(`Failed to create directory '${directory}'.`);
+        console.error(error);
+        continue;
+      }
+    }
+
+    // write the file
+    try {
+      await writeFile(filePath, contents, { encoding: "utf-8" });
+    } catch (error) {
+      console.error(`Failed to write file '${filePath}'.`);
+      console.error(error);
+    }
+  }
 }
 
 async function userResponse(prompt: string): Promise<string> {
-    const u = await Prompt.prompt(prompt, "");
-    if (!u) {
-        console.log("Please enter a response.");
-        return await userResponse(prompt);
-    }
-    return u;
+  const u = await Prompt.prompt(prompt, "");
+  if (!u) {
+    console.log("Please enter a response.");
+    return await userResponse(prompt);
+  }
+  return u.toLowerCase();
 }
 
-async function readFiles(files: string[]): Promise<{ path: string, contents: string }[]> {
-    const filesData: { path: string, contents: string }[] = [];
-    for (const file of files) {
-        const content = await readFile(file, "utf-8");
-        filesData.push({ path: file, contents: content });
+async function readFiles(files: string[]): Promise<{ path: string; contents: string }[]> {
+  const filesData: { path: string; contents: string }[] = [];
+  for (const file of files) {
+    const content = await readFile(file, "utf-8");
+    filesData.push({ path: file, contents: content });
+  }
+  return filesData;
+}
+
+interface ParsedResponse {
+  newFiles: { [filePath: string]: string };
+  nonEditableReferenceFiles: { [filePath: string]: string };
+  editableReferenceFiles: { [filePath: string]: string };
+  commands: string[];
+  notes: string[];
+}
+
+function parseResponse(responseContent: string) {
+  const responseContentSplit = responseContent.split("\n");
+  const indexNewFiles = responseContentSplit.indexOf("New files:");
+  const indexNonEditableFiles = responseContentSplit.indexOf("Non-editable reference files:");
+  const indexEditableFiles = responseContentSplit.indexOf("Editable reference files:");
+  const indexCommands = responseContentSplit.indexOf("Commands to run:");
+  const indexNotes = responseContentSplit.indexOf("Notes:");
+
+  const extractFiles = (startIndex: number, endIndex: number) => {
+    const files: { [path: string]: string } = {};
+    let currentFilePath = "";
+    let fileContents = "";
+
+    for (let i = startIndex + 1; i < endIndex; i++) {
+      const line = responseContentSplit[i];
+
+      if (line.startsWith("# ")) {
+        if (currentFilePath) {
+          files[currentFilePath] = fileContents.trim();
+        }
+        currentFilePath = line.slice(1).trim();
+        fileContents = "";
+      } else if (line.startsWith("```")) {
+        continue;
+      } else {
+        fileContents += line + "\n";
+      }
     }
-    return filesData;
+
+    if (currentFilePath) {
+      files[currentFilePath] = fileContents.trim();
+    }
+
+    return files;
+  };
+
+  const extractCommands = (startIndex: number) => {
+    const commands = [];
+    let foundCommandsBlock = false;
+    for (let i = startIndex + 1; i < responseContentSplit.length; i++) {
+      const line = responseContentSplit[i].trim();
+      if (line.startsWith("```")) {
+        if (foundCommandsBlock) break;
+        foundCommandsBlock = true;
+        continue;
+      }
+      if (foundCommandsBlock) {
+        commands.push(line);
+      }
+    }
+    return commands;
+  };
+
+  const extractNotes = (startIndex: number) => {
+    const notes = [];
+    for (let i = startIndex + 1; i < responseContentSplit.length; i++) {
+      const line = responseContentSplit[i];
+      if (line.startsWith("# ")) {
+        notes.push(line.slice(1).trim());
+      } else {
+        notes.push(line.trim());
+      }
+    }
+    return notes;
+  };
+
+  const parsedResponse: ParsedResponse = {
+    newFiles: {},
+    nonEditableReferenceFiles: {},
+    editableReferenceFiles: {},
+    commands: [],
+    notes: [],
+  };
+
+  if (indexNewFiles >= 0) {
+    const endIndex =
+      indexNonEditableFiles >= 0
+        ? indexNonEditableFiles
+        : indexEditableFiles >= 0
+        ? indexEditableFiles
+        : indexCommands;
+    parsedResponse.newFiles = extractFiles(indexNewFiles, endIndex);
+  }
+  if (indexNonEditableFiles >= 0) {
+    const endIndex = indexEditableFiles >= 0 ? indexEditableFiles : indexCommands;
+    parsedResponse.nonEditableReferenceFiles = extractFiles(indexNonEditableFiles, endIndex);
+  }
+  if (indexEditableFiles >= 0) {
+    const endIndex = indexCommands >= 0 ? indexCommands : indexNotes;
+    parsedResponse.editableReferenceFiles = extractFiles(indexEditableFiles, endIndex);
+  }
+  if (indexCommands >= 0) {
+    parsedResponse.commands = extractCommands(indexCommands);
+  }
+  if (indexNotes >= 0) {
+    parsedResponse.notes = extractNotes(indexNotes);
+  }
+
+  return parsedResponse;
 }
