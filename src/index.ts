@@ -59,11 +59,13 @@ void readPackageJson().then((packageJson) => {
       "-r, --reference-files <referenceFiles...>",
       "Reference files to use. These are not editable but are used to generate code"
     )
+    .option("-d, --directory <directory>", "Output directory for generated code")
     .action(async (objective: string, destfile: string | undefined, options) => {
-      const { language, editableReferenceFiles, referenceFiles } = options;
+      const { language, editableReferenceFiles, referenceFiles, directory } = options;
       await genCode({
         objective,
         destfile,
+        directory,
         language,
         editableReferenceFiles,
         referenceFiles,
