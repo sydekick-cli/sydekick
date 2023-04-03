@@ -1,6 +1,6 @@
 import { ChatCompletionRequestMessage, OpenAIApi } from "openai";
-import { Api } from "./Api";
-import { SYSTEM_PROGRAMMING_PROMPT_EXPECTED_RESPONSE } from "./constants";
+import { Api } from "./Api.js";
+import { SYSTEM_PROGRAMMING_PROMPT_EXPECTED_RESPONSE } from "./constants.js";
 
 export class ChatSession {
   private readonly _chatHistory: ChatCompletionRequestMessage[] = [];
@@ -57,9 +57,10 @@ export class ChatSession {
   }
 
   public async executeSession() {
+    const api = await Api.getInstance();
     let response: Awaited<ReturnType<OpenAIApi["createChatCompletion"]>>;
     try {
-      response = await Api.instance.createChatCompletion({
+      response = await api.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: this._chatHistory,
         n: 1, // Number of responses generated

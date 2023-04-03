@@ -1,6 +1,6 @@
-import { ChatSession } from "../ChatSession";
-import { Database } from "../Database";
-import { Prompt } from "../Prompt";
+import { ChatSession } from "../ChatSession.js";
+import { Database } from "../Database.js";
+import { Prompt } from "../Prompt.js";
 import { Database as Db } from "better-sqlite3";
 
 export type ChatOptions = {

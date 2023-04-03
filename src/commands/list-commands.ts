@@ -1,8 +1,8 @@
 // @ts-ignore
 import { getBrief } from "os-info";
-import { ChatSession } from "../ChatSession";
-import { Executor } from "../Executor";
-import { Prompt } from "../Prompt";
+import { ChatSession } from "../ChatSession.js";
+import { Executor } from "../Executor.js";
+import { Prompt } from "../Prompt.js";
 
 export const SYSTEM_PROGRAMMING_PROMPT = `
 You are a helpful assistant that suggests a list of shell commands the user can execute based on their objective.

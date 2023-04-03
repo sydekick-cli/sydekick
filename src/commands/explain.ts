@@ -1,4 +1,4 @@
-import { ChatSession } from "../ChatSession";
+import { ChatSession } from "../ChatSession.js";
 
 export const SYSTEM_PROGRAMMING_PROMPT = `
 You are an assistant that is an expert at explaining shell commands in plain english.

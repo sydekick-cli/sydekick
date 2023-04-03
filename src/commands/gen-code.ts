@@ -1,6 +1,6 @@
-import path, { basename, dirname, resolve } from "path";
-import { ChatSession } from "../ChatSession";
-import { Prompt } from "../Prompt";
+import path, { basename, dirname } from "path";
+import { ChatSession } from "../ChatSession.js";
+import { Prompt } from "../Prompt.js";
 import { readFile, writeFile } from "fs/promises";
 import { existsSync, mkdirSync } from "fs";
 

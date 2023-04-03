@@ -1,7 +1,7 @@
 import { default as SqliteDb, Database as Db } from "better-sqlite3";
 import { homedir } from "os";
 import { resolve } from "path";
-import { DataHelper } from "./DataHelper";
+import { DataHelper } from "./DataHelper.js";
 
 export class Database {
   private static _instance?: Database;

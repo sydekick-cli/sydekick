@@ -23,7 +23,6 @@
   "dependencies": {
     "better-sqlite3": "^8.2.0",
     "commander": "^10.0.0",
-    "dotenv": "^16.0.3",
     "inquirer": "^9.1.5",
     "keytar": "^7.9.0",
     "openai": "^3.2.1",

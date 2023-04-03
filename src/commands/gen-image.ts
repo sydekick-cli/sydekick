@@ -1,6 +1,6 @@
 import { CreateImageRequestSizeEnum } from "openai";
-import { Api } from "../Api";
-import { Prompt } from "../Prompt";
+import { Api } from "../Api.js";
+import { Prompt } from "../Prompt.js";
 import * as http from "http";
 import * as https from "https";
 import * as fs from "fs";
@@ -49,11 +49,12 @@ export type GenImageOptions = {
 };
 
 export async function genImage(options: GenImageOptions) {
+  const api = await Api.getInstance();
   const { size, prompt } = options;
   let { destfile } = options;
   let imageResponse;
   try {
-    imageResponse = await Api.instance.createImage({
+    imageResponse = await api.createImage({
       n: 1,
       prompt,
       size,
