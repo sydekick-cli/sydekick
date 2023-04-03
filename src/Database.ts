@@ -14,7 +14,9 @@ export class Database {
   }
 
   private readonly _db: Db = new SqliteDb(resolve(homedir(), ".sidekick", "database.db"));
-  private constructor() {}
+  private constructor() {
+    // private constructor
+  }
 
   public get db(): Db {
     return this._db;

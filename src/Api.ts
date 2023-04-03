@@ -2,7 +2,9 @@ import { OpenAIApi, Configuration } from "openai";
 
 export class Api {
   private static _instance?: OpenAIApi;
-  private constructor() {}
+  private constructor() {
+    // private constructor
+  }
 
   public static get instance(): OpenAIApi {
     if (!this._instance) {

@@ -1,8 +1,4 @@
-import {
-  ChatCompletionRequestMessage,
-  ChatCompletionRequestMessageRoleEnum,
-  OpenAIApi,
-} from "openai";
+import { ChatCompletionRequestMessage, OpenAIApi } from "openai";
 import { Api } from "./Api";
 import { SYSTEM_PROGRAMMING_PROMPT_EXPECTED_RESPONSE } from "./constants";
 
@@ -40,7 +36,7 @@ export class ChatSession {
       content: prompt,
     });
 
-    let programmingResponse: Awaited<ReturnType<OpenAIApi["createChatCompletion"]>> =
+    const programmingResponse: Awaited<ReturnType<OpenAIApi["createChatCompletion"]>> =
       await this.executeSession();
 
     // ensure the response is "yes"

@@ -2,7 +2,7 @@ import path from "path";
 import { ChatSession } from "../ChatSession";
 import { Prompt } from "../Prompt";
 import { readFile, writeFile } from "fs/promises";
-import { existsSync } from "fs";
+import { existsSync, mkdirSync } from "fs";
 
 export const SYSTEM_PROGRAMMING_PROMPT = `
 You are a helpful programmer who wants to help the user to solve a problem by writing a program.
@@ -101,7 +101,7 @@ export type GenCodeOptions = {
 };
 
 export async function genCode(options: GenCodeOptions) {
-  let { objective, destfile, directory, language, editableReferenceFiles, referenceFiles } =
+  const { objective, destfile, directory, language, editableReferenceFiles, referenceFiles } =
     options;
   const editableFiles = await readFiles(editableReferenceFiles || []);
   const nonEditableFiles = await readFiles(referenceFiles || []);
@@ -175,10 +175,10 @@ async function acceptOrRejectResponse(parsedResponse: ParsedResponse, directory?
   }
 
   const newFileEntries = Object.entries(parsedResponse.newFiles);
-  await acceptOrRejectFiles(newFileEntries);
+  await acceptOrRejectFiles(newFileEntries, true, directory);
 
   const editableReferenceFileEntries = Object.entries(parsedResponse.editableReferenceFiles);
-  await acceptOrRejectFiles(editableReferenceFileEntries);
+  await acceptOrRejectFiles(editableReferenceFileEntries, false, directory);
 
   console.log("Run these commands to get started:");
   for (const command of parsedResponse.commands) {
@@ -191,12 +191,13 @@ async function acceptOrRejectFiles(
   create = true,
   directory?: string
 ) {
-  for (let [filePath, contents] of newFileEntries) {
+  for (const [filePath, contents] of newFileEntries) {
+    let resolvedPath = filePath;
     if (directory) {
-      filePath = path.join(directory, filePath);
+      resolvedPath = path.join(directory, filePath);
     }
     const response = await userResponse(
-      `${create ? "Create" : "Update"} file '${filePath}'? (y/n) > `
+      `${create ? "Create" : "Update"} file '${resolvedPath}'? (y/n) > `
     );
     if (response === "n") {
       continue;
@@ -205,6 +206,7 @@ async function acceptOrRejectFiles(
     if (directory && !existsSync(directory)) {
       // create the directory
       try {
+        mkdirSync(directory, { recursive: true });
       } catch (error) {
         console.error(`Failed to create directory '${directory}'.`);
         console.error(error);
@@ -214,9 +216,9 @@ async function acceptOrRejectFiles(
 
     // write the file
     try {
-      await writeFile(filePath, contents, { encoding: "utf-8" });
+      await writeFile(resolvedPath, contents, { encoding: "utf-8" });
     } catch (error) {
-      console.error(`Failed to write file '${filePath}'.`);
+      console.error(`Failed to write file '${resolvedPath}'.`);
       console.error(error);
     }
   }

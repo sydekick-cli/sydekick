@@ -67,6 +67,7 @@ export async function chat(options: ChatOptions) {
 
   // start the chat session
   console.log("Starting chat session... Type 'exit' to exit.");
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const input = await Prompt.getRequiredInput("You: ");
     if (input === "exit") {
