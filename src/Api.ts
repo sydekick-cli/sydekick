@@ -13,9 +13,7 @@ export class Api {
         );
         process.exit(1);
       }
-        this._instance = new OpenAIApi(
-            new Configuration({ apiKey: openaiApiKey })
-        );
+      this._instance = new OpenAIApi(new Configuration({ apiKey: openaiApiKey }));
     }
     return this._instance;
   }
