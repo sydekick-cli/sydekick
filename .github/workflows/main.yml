@@ -18,3 +18,7 @@ jobs:
         run: npm run bootstrap
       - name: Lint
         run: npm run lint
+      - name: Link
+        run: npm run link
+      - name: Verify that the sidekick executable can launch
+        run: sidekick --version
