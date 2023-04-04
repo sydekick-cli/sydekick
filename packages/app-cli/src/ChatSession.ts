@@ -56,7 +56,7 @@ export class ChatSession {
     });
   }
 
-  public async executeSession() {
+  public async executeSession(): ReturnType<OpenAIApi["createChatCompletion"]> {
     const api = await Api.getInstance();
     let response: Awaited<ReturnType<OpenAIApi["createChatCompletion"]>>;
     try {
