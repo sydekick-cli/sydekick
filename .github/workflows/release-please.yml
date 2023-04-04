@@ -31,7 +31,11 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
       - run: npm run bootstrap
         if: ${{ steps.release.outputs.release_created }}
-      - run: npm publish
+      # Release Please has already incremented versions and published tags, so we just
+      # need to publish all unpublished versions to NPM here
+      # See: https://github.com/lerna/lerna/tree/main/commands/publish#bump-from-package
+      - name: Publish to NPM
+        if: ${{ steps.release.outputs.releases_created }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-        if: ${{ steps.release.outputs.release_created }}
+        run: npx lerna publish from-package --no-push --no-private --yes
