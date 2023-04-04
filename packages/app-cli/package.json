@@ -4,6 +4,7 @@
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
+  "private": false,
   "bin": {
     "sydekick": "./dist/index.js"
   },
@@ -40,5 +41,5 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.0.3"
   },
-  "gitHead": "a17f0023390d1c0b43d8feb29370975ddd5c259d"
+  "gitHead": "5e9ff83dfc5b4737ecc9098d3164737b735f3606"
 }
