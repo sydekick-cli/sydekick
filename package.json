@@ -1,5 +1,5 @@
 {
-  "name": "sk",
+  "name": "sydekick",
   "version": "1.0.0-alpha.2",
   "description": "",
   "private": true,
@@ -8,7 +8,7 @@
     "build": "tsc -b -v && lerna run build",
     "clean-all": "npm run clean-build && npm run clean-node-modules",
     "clean-build": "rimraf packages/*/dist; rimraf packages/**/*.tsbuildinfo",
-    "clean-node-modules": "rimraf node_modules; rimraf packages/**/node_modules",
+    "clean-node-modules": "rimraf packages/**/node_modules; rimraf node_modules",
     "dev": "npm-run-all -l -p --parallel dev:*",
     "dev:tsc": "tsc -b -v -w",
     "link": "lerna run link",
