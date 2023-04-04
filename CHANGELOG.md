@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0-alpha.2](https://github.com/feedmefries/sidekick/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2023-04-04)
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-alpha.2 ([2930d5e](https://github.com/feedmefries/sidekick/commit/2930d5e2e5db06924b9ae84c8c75f095c23af3d7))
+
 ## 1.0.0-alpha.1 (2023-04-04)
 
 
