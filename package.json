@@ -1,44 +1,36 @@
 {
-  "name": "chatgpt-sidekick",
+  "name": "sk",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
-  "main": "./dist/index.js",
-  "bin": {
-    "sidekick": "./dist/index.js"
-  },
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc -w",
-    "lint": "eslint --ext .ts .",
-    "start": "ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "bootstrap": "npm install && lerna bootstrap && npm run build",
+    "build": "tsc -b -v && lerna run build",
+    "dev": "npm-run-all -l -p --parallel dev:*",
+    "dev:tsc": "tsc -b -v -w",
+    "link": "lerna run link",
+    "clean-all": "npm run clean-build && npm run clean-node-modules",
+    "clean-build": "rimraf packages/*/dist; rimraf packages/**/*.tsbuildinfo",
+    "clean-node-modules": "rimraf node_modules; rimraf packages/**/node_modules",
+    "lint": "eslint . --ext .ts",
+    "refresh": "npm run clean-all && npm run bootstrap"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "better-sqlite3": "^8.2.0",
-    "commander": "^10.0.0",
-    "inquirer": "^9.1.5",
-    "keytar": "^7.9.0",
-    "openai": "^3.2.1",
-    "os-info": "^1.0.0"
-  },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.3",
-    "@types/inquirer": "^9.0.3",
-    "@types/node": "^18.15.11",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "lerna": "^6.6.1",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.8.7",
+    "rimraf": "^4.4.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.3"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "ES2020",
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "moduleResolution": "node16",
+        "resolveJsonModule": true,
+        "declaration": true,
+        "resolvePackageJsonImports": true,
+        "strict": true,
+        "composite": true
+    }
+}

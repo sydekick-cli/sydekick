@@ -1,0 +1,38 @@
+{
+  "name": "@sk/cli",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "sidekick": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsc -w",
+    "link": "npm link",
+    "lint": "eslint --ext .ts .",
+    "start": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^8.2.0",
+    "commander": "^10.0.0",
+    "inquirer": "^9.1.5",
+    "keytar": "^7.9.0",
+    "openai": "^3.2.1",
+    "os-info": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.3",
+    "@types/inquirer": "^9.0.3",
+    "@types/node": "^18.15.11",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.3"
+  }
+}

@@ -3,14 +3,13 @@
 	"tasks": [
 		{
 			"type": "npm",
-			"script": "build:watch",
+			"script": "dev",
 			"group": {
 				"isDefault": true,
 				"kind": "build"
 			},
 			"problemMatcher": [],
-			"label": "npm: build:watch",
-			"detail": "tsc -w"
+			"label": "npm: dev",
 		}
 	]
 }
