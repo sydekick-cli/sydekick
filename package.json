@@ -17,7 +17,6 @@
     "refresh": "npm run clean-all && npm run bootstrap"
   },
   "keywords": [],
-  "author": "",
   "license": "MIT",
   "devDependencies": {
     "lerna": "^6.6.1",
@@ -29,5 +28,14 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "author": "Seth Lessard <sethlessard@outlook.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feedmefries/sidekick.git"
+  },
+  "bugs": {
+    "url": "https://github.com/feedmefries/sidekick/issues"
+  },
+  "homepage": "https://github.com/feedmefries/sidekick#readme"
 }
