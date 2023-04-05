@@ -20,5 +20,5 @@ jobs:
         run: npm run lint
       - name: Link
         run: npm run link
-      - name: Verify that the sidekick executable can launch
-        run: sidekick --version
+      - name: Verify that the sydekick executable can launch
+        run: sydekick --version
