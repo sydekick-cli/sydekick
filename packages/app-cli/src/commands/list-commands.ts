@@ -1,8 +1,9 @@
 // @ts-ignore
 import { getBrief } from "os-info";
-import { ChatSession } from "../ChatSession.js";
+import { ChatSession } from "@sydekick/lib-ai";
 import { Executor } from "../Executor.js";
 import { Prompt } from "../Prompt.js";
+import { AiPlatformProviderManager } from "@sydekick/lib-ai-provider";
 
 export const SYSTEM_PROGRAMMING_PROMPT = `
 You are a helpful assistant that suggests a list of shell commands the user can execute based on their objective.
@@ -56,13 +57,18 @@ If you understand, please reply only with the word "yes".
 export async function listCommands(objective: string, execute?: boolean) {
   console.log("Waking up sidekick...");
 
-  const chatSession = new ChatSession();
+  // use the built in default provider for now
+  const providerManager = new AiPlatformProviderManager();
+  const chatCompletionProviderFactory = providerManager.defaultChatCompletionProviderFactory;
+  const chatCompletionProvider = await chatCompletionProviderFactory.createProvider();
+  const chatSession = new ChatSession(chatCompletionProvider);
   await chatSession.programChat(SYSTEM_PROGRAMMING_PROMPT);
 
   let additionalInfo = "";
   additionalInfo += `Operating System: ${getBrief().Platform}\n`;
   additionalInfo += `Present Working Directory: ${process.cwd()}\n`;
-  chatSession.chatAsUser(
+  chatSession.chatAsRole(
+    "user",
     `This is my objective:\n${objective}\n\n${additionalInfo}Please reply in the format previously specified.`
   );
 

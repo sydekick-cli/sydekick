@@ -1,7 +1,8 @@
-import { ChatSession } from "../ChatSession.js";
-import { Database } from "../Database.js";
+import { ChatSession } from "@sydekick/lib-ai";
 import { Prompt } from "../Prompt.js";
-import { Database as Db } from "better-sqlite3";
+import { CliCommand } from "./CliCommand.js";
+import { Command as CommanderCommand } from "commander";
+import { AiPlatformProviderManager } from "@sydekick/lib-ai-provider";
 
 export type ChatOptions = {
   previousSubject?: string;
@@ -9,62 +10,64 @@ export type ChatOptions = {
   delete?: string;
 };
 
-export async function chat(options: ChatOptions) {
-  const { previousSubject, list, delete: deleteSubject } = options;
-  const db = Database.connection.db;
-  // check to see if the chat_history table exists
-  initializeChatHistoryTable(db);
+class CommandChatListSubjects extends CliCommand<{}> {
+  // api route:
+  // GET /chat/subjects // list previous subjects (i.e 'sydekick chat list')
 
-  if (deleteSubject) {
-    // delete the subject
-    const result = db.prepare(`DELETE FROM chat_history WHERE subject = ?`).run(deleteSubject);
-    if (result.changes > 0) {
-      console.log(`Deleted ${result.changes} messages for subject ${deleteSubject}`);
-    } else {
-      console.log(`No messages found for subject ${deleteSubject}`);
-    }
-    process.exit(0);
+  protected _buildCommanderCommand(program: CommanderCommand): CommanderCommand {
+    return program.command("list").description("List previous subjects");
   }
-
-  if (list) {
+  public run(_options: {}): Promise<void> {
+    // todo: implement this
     // list all subjects
-    const subjects = db.prepare(`SELECT DISTINCT subject FROM chat_history`).all();
-    if (subjects.length > 0) {
-      console.log("Previous subjects:");
-      for (const subject of subjects) {
-        console.log(subject.subject);
-      }
-    } else {
-      console.log("No previous subjects found");
-    }
+    // const subjects = db.prepare(`SELECT DISTINCT subject FROM chat_history`).all();
+    // if (subjects.length > 0) {
+    //   console.log("Previous subjects:");
+    //   for (const subject of subjects) {
+    //     console.log(subject.subject);
+    //   }
+    // } else {
+    //   console.log("No previous subjects found");
+    // }
     process.exit(0);
   }
-
-  const chatSession = new ChatSession();
-  if (previousSubject) {
-    // attempt to load the previous chat history
-    const previousMessages = db
-      .prepare(`SELECT id, user, message, created_at FROM chat_history WHERE subject = ?`)
-      .all(previousSubject);
-    if (previousMessages.length > 0) {
-      console.log("Previous messages found:");
-      // load the previous messages
-      for (const message of previousMessages) {
-        if (message.user === "system") {
-          chatSession.chatAsSystem(message.message);
-          console.log(`Sidekick: ${message.message}`);
-        } else {
-          chatSession.chatAsUser(message.message);
-          console.log(`You: ${message.message}`);
-        }
-      }
-    } else {
-      // no previous messages found
-      console.log(`No previous messages found for subject ${previousSubject}`);
-      process.exit(1);
-    }
+  public parseArgs<T extends any[]>(...args: T): {} {
+    return {};
   }
+}
 
+class CommandChatDeleteSubject extends CliCommand<{ subject: string }> {
+  // api route:
+  // DELETE /chat/subjects/:subject // delete a subject (i.e chat -d <subject>)
+  protected _buildCommanderCommand(program: CommanderCommand): CommanderCommand {
+    return program.command("delete <subject>").description("Delete a previous subject");
+  }
+  public run(options: { subject: string }): Promise<void> {
+    // todo: implement this
+    // delete the subject
+    // const result = db.prepare(`DELETE FROM chat_history WHERE subject = ?`).run(deleteSubject);
+    // if (result.changes > 0) {
+    //   console.log(`Deleted ${result.changes} messages for subject ${deleteSubject}`);
+    // } else {
+    //   console.log(`No messages found for subject ${deleteSubject}`);
+    // }
+    process.exit(0);
+  }
+  public parseArgs<T extends any[]>(...args: T): { subject: string } {
+    return { subject: args[0] };
+  }
+}
+
+async function initializeChatSession(): Promise<ChatSession> {
+  const providerManager = new AiPlatformProviderManager();
+  const chatCompletionProviderFactory = providerManager.defaultChatCompletionProviderFactory;
+  const chatCompletionProvider = await chatCompletionProviderFactory.createProvider();
+  // initialize the chatCompletionProvider
+  await chatCompletionProvider.initialize();
+  return new ChatSession(chatCompletionProvider);
+}
+
+async function commonChat(chatSession: ChatSession, previousSubject?: string) {
   // start the chat session
   console.log("Starting chat session... Type 'exit' to exit.");
   // eslint-disable-next-line no-constant-condition
@@ -76,46 +79,91 @@ export async function chat(options: ChatOptions) {
     }
 
     // chat as the user
-    chatSession.chatAsUser(input);
+    chatSession.chatAsRole("user", input);
 
     // execute the chat session
     const response = await chatSession.executeSession();
-    const responseContent =
-      // @ts-ignore
-      response.data.choices[0].message.content;
-    chatSession.chatAsSystem(responseContent);
+    const responseContent = response[0].content;
+    chatSession.chatAsRole("system", responseContent);
     console.log(`Sidekick: ${responseContent}`);
   }
 
-  const subject = previousSubject || (await Prompt.getRequiredInput("Subject: "));
-  for (const message of chatSession.messages) {
-    await saveChatHistory(subject, message.role, message.content);
+  // todo: implement this
+  // const subject = previousSubject || (await Prompt.getRequiredInput("Subject: "));
+  // for (const message of chatSession.messages) {
+  //   await saveChatHistory(subject, message.role, message.content);
+  // }
+}
+
+class CommandChatNew extends CliCommand<{ subject?: string }> {
+  protected _buildCommanderCommand(program: CommanderCommand): CommanderCommand {
+    return program.command("new [subject]").description("Start a new chat session");
+  }
+  public async run(options: { subject?: string | undefined }): Promise<void> {
+    const chatSession = await initializeChatSession();
+    await commonChat(chatSession, options.subject);
+  }
+  public parseArgs<T extends any[]>(...args: T): { subject?: string | undefined } {
+    return { subject: args[0] };
   }
 }
 
-function initializeChatHistoryTable(db: Db) {
-  const chatHistoryTable = db
-    .prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name='chat_history'`)
-    .get();
-  if (!chatHistoryTable) {
-    // initialize the chat_history table
-    db.prepare(
-      `CREATE TABLE chat_history (id INTEGER PRIMARY KEY AUTOINCREMENT, subject TEXT, message TEXT, user TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)`
-    ).run();
+class CommandChatResume extends CliCommand<{ subject: string }> {
+  protected _buildCommanderCommand(program: CommanderCommand): CommanderCommand {
+    return program.command("resume <subject>").description("Resume a previous chat session");
+  }
+  public async run(options: { subject: string }): Promise<void> {
+    const chatSession = await initializeChatSession();
+    // todo: implement this
+    //   // attempt to load the previous chat history
+    //   const previousMessages = db
+    //     .prepare(`SELECT id, user, message, created_at FROM chat_history WHERE subject = ?`)
+    //     .all(subject);
+    //   if (previousMessages.length > 0) {
+    //     console.log("Previous messages found:");
+    //     // load the previous messages
+    //     for (const message of previousMessages) {
+    //       if (message.user === "system") {
+    //         chatSession.chatAsRole("system", message.message);
+    //         console.log(`Sidekick: ${message.message}`);
+    //       } else {
+    //         chatSession.chatAsRole("user", message.message);
+    //         console.log(`You: ${message.message}`);
+    //       }
+    //     }
+    //   } else {
+    //     // no previous messages found
+    //     console.log(`No previous messages found for subject ${subject}`);
+    //     process.exit(1);
+    //   }
+    await commonChat(chatSession, options.subject);
+  }
+  public parseArgs<T extends any[]>(...args: T): { subject: string } {
+    return { subject: args[0] };
   }
 }
 
-async function saveChatHistory(subject: string, user: string, message: string) {
-  const db = Database.connection.db;
-  const existingMessage = db
-    .prepare(`SELECT id FROM chat_history WHERE subject = ? AND user = ? AND message = ?`)
-    .get(subject, user, message);
-
-  if (!existingMessage) {
-    db.prepare(`INSERT INTO chat_history (subject, user, message) VALUES (?, ?, ?)`).run(
-      subject,
-      user,
-      message
+export class CommandChat extends CliCommand<{}> {
+  constructor() {
+    super();
+    this._subCommands.push(
+      new CommandChatListSubjects(),
+      new CommandChatDeleteSubject(),
+      new CommandChatNew(),
+      new CommandChatResume()
     );
+  }
+
+  protected _buildCommanderCommand(program: CommanderCommand): CommanderCommand {
+    return program.command("chat").description("Sydekick chat");
+    // api routes:
+    // GET /chat // empty {} response
+  }
+  public async run(options: {}): Promise<void> {
+    this._commanderCommand?.outputHelp();
+  }
+
+  public parseArgs<T extends any[]>(...args: T): {} {
+    return {};
   }
 }

@@ -1,8 +1,9 @@
 import path, { basename, dirname } from "path";
-import { ChatSession } from "../ChatSession.js";
+import { ChatSession } from "@sydekick/lib-ai";
 import { Prompt } from "../Prompt.js";
 import { readFile, writeFile } from "fs/promises";
 import { existsSync, mkdirSync } from "fs";
+import { AiPlatformProviderManager } from "@sydekick/lib-ai-provider";
 
 export const FORMAT_DESCRIPTION = `
   <new files>
@@ -107,7 +108,10 @@ export async function genCode(options: GenCodeOptions) {
   const editableFiles = await readFiles(editableReferenceFiles || []);
   const nonEditableFiles = await readFiles(referenceFiles || []);
 
-  const chatSession = new ChatSession();
+  const providerManager = new AiPlatformProviderManager();
+  const chatCompletionProviderFactory = providerManager.defaultChatCompletionProviderFactory;
+  const chatCompletionProvider = await chatCompletionProviderFactory.createProvider();
+  const chatSession = new ChatSession(chatCompletionProvider);
   await chatSession.programChat(SYSTEM_PROGRAMMING_PROMPT);
 
   let userMessage = `I am trying to solve the following problem:\n${objective}\n\n`;
@@ -133,22 +137,22 @@ export async function genCode(options: GenCodeOptions) {
   }
   userMessage +=
     "Please only respond in one of the formats initially described. If you do not, I will not be able to understand your response.\n\n";
-  chatSession.chatAsUser(userMessage);
+  chatSession.chatAsRole("user", userMessage);
 
   let finished = false;
   while (!finished) {
     const response = await chatSession.executeSession();
-    const responseContent = response.data.choices[0].message?.content;
+    const responseContent = response[0].content;
     if (!responseContent) {
       console.error("No response content.");
       process.exit(1);
     }
     if (responseContent.toLowerCase().startsWith("sorry")) {
-      console.error(response.data.choices[0].message?.content);
+      console.error(responseContent);
       process.exit(1);
     } else {
       console.log(responseContent);
-      chatSession.chatAsSystem(responseContent);
+      chatSession.chatAsRole("system", responseContent);
       console.log("\n\n");
 
       const parsedResponse = parseResponse(responseContent);
@@ -158,7 +162,7 @@ export async function genCode(options: GenCodeOptions) {
           (await Prompt.getRequiredInput("Did gpt prompt you with a question? (y/n) > ")) === "y";
         if (isQuestion) {
           const userResponse = await Prompt.getRequiredInput("What was your response? > ");
-          chatSession.chatAsUser(userResponse);
+          chatSession.chatAsRole("user", userResponse);
           continue;
         }
         const response = await Prompt.getRequiredInput(
@@ -167,7 +171,8 @@ export async function genCode(options: GenCodeOptions) {
         if (response === "n") {
           process.exit(1);
         }
-        chatSession.chatAsUser(
+        chatSession.chatAsRole(
+          "user",
           `I was unable to parse your answer. Please make sure it follows the format initially described. Here it is again if you forgot:\n${FORMAT_DESCRIPTION}`
         );
         continue;

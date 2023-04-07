@@ -1,4 +1,5 @@
-import { ChatSession } from "../ChatSession.js";
+import { ChatSession } from "@sydekick/lib-ai";
+import { AiPlatformProviderManager } from "@sydekick/lib-ai-provider";
 
 export const SYSTEM_PROGRAMMING_PROMPT = `
 You are an assistant that is an expert at explaining shell commands in plain english.
@@ -14,11 +15,14 @@ If you understand, please reply only with the exact phrase "yes".
 
 export async function explain(command: string) {
   console.log("Waking up sidekick...");
-  const chatSession = new ChatSession();
+  const providerManager = new AiPlatformProviderManager();
+  const chatCompletionProviderFactory = providerManager.defaultChatCompletionProviderFactory;
+  const chatCompletionProvider = await chatCompletionProviderFactory.createProvider();
+  const chatSession = new ChatSession(chatCompletionProvider);
   await chatSession.programChat(SYSTEM_PROGRAMMING_PROMPT);
 
   console.log("Let me think...");
-  chatSession.chatAsUser(command);
+  chatSession.chatAsRole("user", command);
   const response = await chatSession.executeSession();
   const responseContent =
     // @ts-ignore

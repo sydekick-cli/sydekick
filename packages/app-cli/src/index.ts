@@ -4,16 +4,16 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import { Command } from "commander";
+import { Command as CommanderCommand } from "commander";
 
 import { listCommands } from "./commands/list-commands.js";
 import { explain } from "./commands/explain.js";
 import { genCode } from "./commands/gen-code.js";
-import { chat } from "./commands/chat.js";
+import { CommandChat } from "./commands/chat.js";
 import { genImage } from "./commands/gen-image.js";
 import fs from "fs/promises";
-import { signIn } from "./commands/sign-in.js";
-import { signOut } from "./commands/sign-out.js";
+import { CliCommand } from "./commands/CliCommand.js";
+import { CommandProvider } from "./commands/provider.js";
 
 async function readPackageJson() {
   const fileContent = await fs.readFile(resolve(__dirname, "../", "./package.json"), "utf-8");
@@ -21,22 +21,15 @@ async function readPackageJson() {
   return packageJson;
 }
 
+const commands: CliCommand[] = [new CommandChat(), new CommandProvider()];
+
 void readPackageJson().then((packageJson) => {
-  const program = new Command();
+  const program = new CommanderCommand();
   program.description("Assists with CLI commands using ChatGPT").version(packageJson.version);
 
-  program
-    .command("chat [previous-subject]")
-    .description("Start or continue a conversation with Sidekick")
-    .option("-l, --list", "List previous subjects")
-    .option("-d, --delete <subject>", "Delete a subject")
-    .action(async (previousSubject: string | undefined, options) => {
-      await chat({
-        previousSubject,
-        list: options.list,
-        delete: options.delete,
-      });
-    });
+  for (const command of commands) {
+    command.buildCommanderCommand(program);
+  }
 
   program
     .command("explain <command>")
@@ -96,20 +89,6 @@ void readPackageJson().then((packageJson) => {
     .action(async (objective, options) => {
       const execute = options.execute;
       await listCommands(objective, execute);
-    });
-
-  program
-    .command("sign-in")
-    .description("Sign in to OpenAI with your API key")
-    .action(async () => {
-      await signIn();
-    });
-
-  program
-    .command("sign-out")
-    .description("Sign out of OpenAI and remove the API key from your keychain")
-    .action(async () => {
-      await signOut();
     });
 
   program.parse(process.argv);

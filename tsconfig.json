@@ -1,8 +1,37 @@
 {
-    "references": [
-        {
-            "path": "./packages/app-cli"
-        }
-    ],
-    "exclude": ["*"]
+  "references": [
+    {
+      "path": "packages/lib-util"
+    },
+    {
+      "path": "packages/lib-openai"
+    },
+    {
+      "path": "packages/lib-keystore"
+    },
+    {
+      "path": "packages/lib-gpt4all"
+    },
+    {
+      "path": "packages/lib-db"
+    },
+    {
+      "path": "packages/lib-ai-provider"
+    },
+    {
+      "path": "packages/lib-ai"
+    },
+    {
+      "path": "packages/app-cli"
+    },
+    {
+      "path": "packages/lib-service-chat"
+    },
+    {
+      "path": "packages/lib-service"
+    }
+  ],
+  "exclude": [
+    "*"
+  ]
 }
