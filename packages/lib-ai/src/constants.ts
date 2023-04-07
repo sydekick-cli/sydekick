@@ -1,0 +1,1 @@
+export const SYSTEM_PROGRAMMING_PROMPT_EXPECTED_RESPONSE = /yes.*/i;
