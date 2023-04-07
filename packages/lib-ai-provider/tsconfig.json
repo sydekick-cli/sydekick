@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "references": [
+    {
+      "path": "../lib-ai"
+    },
+    {
+      "path": "../lib-openai"
+    },
+    {
+      "path": "../lib-gpt4all"
+    },
+    {
+      "path": "../lib-keystore"
+    }
+  ],
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "./node_modules",
+    "./dist",
+    "*.cjs"
+  ]
+}
