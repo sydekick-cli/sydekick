@@ -3,13 +3,13 @@
 	"tasks": [
 		{
 			"type": "npm",
-			"script": "dev",
+			"script": "dev:bootstrap",
 			"group": {
 				"isDefault": true,
 				"kind": "build"
 			},
 			"problemMatcher": [],
-			"label": "npm: dev",
+			"label": "npm: dev:bootstrap",
 		}
 	]
 }
