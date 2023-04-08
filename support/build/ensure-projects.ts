@@ -31,6 +31,10 @@ void (async () => {
     debug(
       `Processing ${tsconfigProject.name} (tsconfig.json: ${tsconfigProject.tsConfigPath}, package.json: ${tsconfigProject.packageJsonPath})`
     );
+    // ensure the package.json is of type module
+    tsconfigProject.packageJson.type = tsconfigProject.packageJson.type || "module";
+    // ensure the package.json has a main entry point
+    tsconfigProject.packageJson.main = tsconfigProject.packageJson.main || "dist/index.js";
     ensureBaseTSConfigHasReferenceToThisProject(tsconfigProject, rootTsconfigProject);
     // ensure tsconfig.json extends tsconfig.base.json
     ensureTSConfigExtendsRootBaseTSConfig(tsconfigProject, rootTsConfigBasePath);
