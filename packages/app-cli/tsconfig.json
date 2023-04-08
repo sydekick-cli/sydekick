@@ -1,16 +1,29 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-      "outDir": "./dist",
-      "rootDir": "./src",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "./node_modules",
+    "./dist",
+    "*.cjs"
+  ],
+  "references": [
+    {
+      "path": "../lib-ai"
     },
-    "include": [
-      "./src/**/*"
-    ],
-    "exclude": [
-      "./node_modules",
-      "./dist",
-      "*.cjs"
-    ]
-  }
-  
+    {
+      "path": "../lib-openai"
+    },
+    {
+      "path": "../lib-keystore"
+    },
+    {
+      "path": "../lib-ai-provider"
+    }
+  ]
+}

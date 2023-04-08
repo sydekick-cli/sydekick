@@ -1,9 +1,10 @@
 {
   "name": "@sydekick/cli",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "private": false,
   "bin": {
     "sydekick": "./dist/index.js"
@@ -21,15 +22,15 @@
   "keywords": [],
   "license": "MIT",
   "dependencies": {
-    "better-sqlite3": "^8.2.0",
+    "@sydekick/lib-ai": "1.0.0-alpha.3",
+    "@sydekick/lib-ai-provider": "1.0.0-alpha.3",
     "commander": "^10.0.0",
+    "debug": "^4.3.4",
     "inquirer": "^9.1.5",
-    "keytar": "^7.9.0",
-    "openai": "^3.2.1",
     "os-info": "^1.0.0"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.3",
+    "@types/debug": "^4.1.7",
     "@types/inquirer": "^9.0.3",
     "@types/node": "^18.15.11",
     "@typescript-eslint/eslint-plugin": "^5.57.1",

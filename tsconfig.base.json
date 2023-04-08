@@ -1,14 +1,34 @@
 {
     "compilerOptions": {
+        // Specifies the ECMAScript target version for the TypeScript compiler to produce.
         "target": "ES6",
+        // Specifies the module code generation method for the output.
         "module": "ES2020",
+        // Enables emitting interoperable JavaScript modules that can be used by other tools.
         "esModuleInterop": true,
+        // Generates corresponding .map files for the compiled JavaScript files to enable debugging.
         "sourceMap": true,
+        // Specifies the module resolution strategy; in this case, Node.js 16 compatible resolution.
         "moduleResolution": "node16",
+        // Allows importing JSON modules in TypeScript files.
         "resolveJsonModule": true,
+        // Generates corresponding .d.ts files for the TypeScript files.
         "declaration": true,
+        // Skips checking the TypeScript default libraries for type errors.
+        "skipDefaultLibCheck": true,
+        // Skips checking declaration files (.d.ts) for type errors.
+        "skipLibCheck": true,
+        // Enables resolving imports directly from a package's "package.json" file.
         "resolvePackageJsonImports": true,
+        // Emits metadata about decorators for reflection.
+        "emitDecoratorMetadata": true,
+        // Allows using experimental decorator features in TypeScript.
+        "experimentalDecorators": true,
+        // Enables all strict type-checking options.
         "strict": true,
-        "composite": true
+        // Enables project references and allows TypeScript to treat this project as a composite.
+        "composite": true,
+        // Requires a superclass member to be marked with the 'override' keyword when it is overridden in a derived class.
+        "noImplicitOverride": true
     }
 }
