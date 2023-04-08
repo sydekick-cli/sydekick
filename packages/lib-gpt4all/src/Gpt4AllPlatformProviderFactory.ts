@@ -6,10 +6,10 @@ export class Gpt4AllPlatformProviderFactory implements IAiProviderFactory<GPT4Al
   get name(): string {
     return "gpt4all";
   }
-  async createProvider(): Promise<GPT4AllPlatformProvider> {
+  createProvider(): Promise<GPT4AllPlatformProvider> {
     // No authentication needed for GPT4All
     // Return an instance of Gpt4AllProvider
 
-    return new GPT4AllPlatformProvider();
+    return Promise.resolve(new GPT4AllPlatformProvider());
   }
 }

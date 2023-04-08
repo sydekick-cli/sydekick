@@ -1,7 +1,9 @@
-import { IAiChatCompletionProvider, IAiCompletionProvider, IChatMessage } from "@sydekick/lib-ai";
-import { OpenAiModelProvider } from "../OpenAiModelProvider.js";
-import { OpenAIApi } from "openai";
+import { IAiCompletionProvider } from "@sydekick/lib-ai";
 import debugLog from "debug";
+import { OpenAIApi } from "openai";
+
+import { OpenAiModelProvider } from "../OpenAiModelProvider.js";
+import { formatError } from "@sydekick/lib-util";
 
 export class OpenAiCompletionProvider extends OpenAiModelProvider implements IAiCompletionProvider {
   private _chatCompletionModelName = "gpt-3.5-turbo";
@@ -22,10 +24,10 @@ export class OpenAiCompletionProvider extends OpenAiModelProvider implements IAi
       });
       debug(`Completion response: ${JSON.stringify(response)}`);
     } catch (error) {
-      throw new Error(`OpenAI Completion Error: ${error}`);
+      throw new Error(`OpenAI Completion Error: ${formatError(error)}`);
     }
     const responseText = response.data.choices[0].text;
-    debug(`Completion response text: ${responseText}`);
+    debug(`Completion response text: ${responseText || ""}`);
     return responseText || "";
   }
 }

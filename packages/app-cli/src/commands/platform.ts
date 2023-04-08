@@ -20,7 +20,7 @@ class CommandPlatformList extends CliCommand<PlatformListOptions> {
       .option("-e, --enabled", "List enabled and installed platforms")
       .option("-i, --installed", "List installed platforms");
   }
-  public async run(options: PlatformListOptions): Promise<void> {
+  public run(options: PlatformListOptions): Promise<void> {
     // todo: print default platform
     const { all, enabled, disabled } = options;
 
@@ -35,7 +35,7 @@ class CommandPlatformList extends CliCommand<PlatformListOptions> {
           console.log(`${name}: ${platform.description}`);
         }
       }
-      return;
+      return Promise.resolve();
     }
 
     if (disabled) {
@@ -46,7 +46,7 @@ class CommandPlatformList extends CliCommand<PlatformListOptions> {
           console.log(`${name}: ${platform.description}`);
         }
       }
-      return;
+      return Promise.resolve();
     }
 
     if (all) {
@@ -59,7 +59,7 @@ class CommandPlatformList extends CliCommand<PlatformListOptions> {
           }})`
         );
       }
-      return;
+      return Promise.resolve();
     }
 
     // list installed platforms
@@ -71,9 +71,10 @@ class CommandPlatformList extends CliCommand<PlatformListOptions> {
         );
       }
     }
+    return Promise.resolve();
   }
-  public parseArgs<T extends any[]>(...args: T): PlatformListOptions {
-    const [options] = args;
+  public parseArgs<T extends unknown[]>(...args: T): PlatformListOptions {
+    const options = args[0] as PlatformListOptions;
     return {
       all: options.all,
       enabled: options.enabled,
@@ -94,7 +95,10 @@ type PlatformInstallOptions = {
 };
 class CommandPlatformInstall extends CliCommand<PlatformInstallOptions> {
   protected _buildCommanderCommand(program: Command): Command {
-    return program.command("install <platform>").description("Install a platform");
+    return program
+      .command("install <platform>")
+      .description("Install a platform")
+      .option("-f, --force", "Force install the platform even if it is already installed");
   }
   public async run(options: PlatformInstallOptions): Promise<void> {
     const debug = debugLog("@sydekick/app-cli:CommandPlatformInstall::run");
@@ -123,10 +127,14 @@ class CommandPlatformInstall extends CliCommand<PlatformInstallOptions> {
     }
     console.log(`Platform ${options.platform} installed.`);
   }
-  public parseArgs<T extends any[]>(...args: T): PlatformInstallOptions {
+  public parseArgs<T extends unknown[]>(...args: T): PlatformInstallOptions {
+    const platform = args[0] as string;
+    const options = args[1] as {
+      force?: boolean;
+    };
     return {
-      platform: args[0],
-      force: args[1].force,
+      platform,
+      force: options.force,
     };
   }
 }
@@ -141,10 +149,11 @@ export class CommandPlatform extends CliCommand<undefined> {
   protected _buildCommanderCommand(program: Command): Command {
     return program.command("platform").description("Manage Sidekick ai platforms.");
   }
-  public async run(options: undefined): Promise<void> {
+  public run(_options: undefined): Promise<void> {
     this._commanderCommand?.outputHelp();
+    return Promise.resolve();
   }
-  public parseArgs<T extends unknown[]>(...args: T) {
+  public parseArgs<T extends unknown[]>(..._args: T) {
     return undefined;
   }
 }

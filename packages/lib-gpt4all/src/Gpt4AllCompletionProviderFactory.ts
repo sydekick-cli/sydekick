@@ -7,7 +7,7 @@ export class Gpt4AllCompletionProviderFactory
   extends Gpt4AllProvider
   implements IAiCompletionProviderFactory
 {
-  async createProvider(): Promise<IAiCompletionProvider> {
-    return new Gpt4AllCompletionProvider();
+  createProvider(): Promise<IAiCompletionProvider> {
+    return Promise.resolve(new Gpt4AllCompletionProvider());
   }
 }

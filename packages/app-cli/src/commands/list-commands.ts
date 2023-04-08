@@ -1,5 +1,3 @@
-// @ts-ignore
-import { getBrief } from "os-info";
 import { ChatSession } from "@sydekick/lib-ai";
 import { Executor } from "../Executor.js";
 import { Prompt } from "../Prompt.js";
@@ -65,7 +63,8 @@ export async function listCommands(objective: string, execute?: boolean) {
   await chatSession.programChat(SYSTEM_PROGRAMMING_PROMPT);
 
   let additionalInfo = "";
-  additionalInfo += `Operating System: ${getBrief().Platform}\n`;
+  // todo:
+  // additionalInfo += `Operating System: ${getBrief().Platform}\n`;
   additionalInfo += `Present Working Directory: ${process.cwd()}\n`;
   chatSession.chatAsRole(
     "user",
@@ -76,9 +75,7 @@ export async function listCommands(objective: string, execute?: boolean) {
 
   const chatgptResponse = await chatSession.executeSession();
 
-  let commands =
-    // @ts-ignore
-    chatgptResponse.data.choices[0].message.content.split("\n");
+  let commands = chatgptResponse[0].content.split("\n");
 
   // find the index of the header
   let headerIndex = -1;

@@ -16,8 +16,8 @@
         "declaration": true,
         // Skips checking the TypeScript default libraries for type errors.
         "skipDefaultLibCheck": true,
-        // Skips checking declaration files (.d.ts) for type errors.
-        "skipLibCheck": true,
+        // Skips checking declaration files (.d.ts) for type errors if enabled.
+        "skipLibCheck": false,
         // Enables resolving imports directly from a package's "package.json" file.
         "resolvePackageJsonImports": true,
         // Emits metadata about decorators for reflection.

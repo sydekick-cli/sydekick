@@ -1,3 +1,45 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export interface LernaJson {
+  lerna: string;
+  version: string;
+  npmClient?: string;
+  command?: {
+    publish?: {
+      ignoreChanges?: string[];
+      message?: string;
+      registry?: string;
+      canary?: boolean | string;
+      exact?: boolean;
+      forcePublish?: boolean | string[];
+      skipGit?: boolean;
+      skipNpm?: boolean;
+      distTag?: string;
+      npmTag?: string;
+      allowBranch?: string | string[];
+      conventionalCommits?: boolean;
+      conventionalGraduate?: boolean | string[];
+      signGitCommit?: boolean;
+      signGitTag?: boolean;
+      forceBump?: boolean;
+    };
+    bootstrap?: {
+      ignore?: string;
+      npmClientArgs?: string[];
+      scope?: string[];
+      nohoist?: boolean;
+      registry?: string;
+    };
+    clean?: {
+      yes?: boolean;
+    };
+  };
+  packages?: string[];
+  ignoreChanges?: string[];
+  loglevel?: "silent" | "error" | "warn" | "success" | "info" | "verbose" | "silly";
+  hoist?: boolean | string;
+  useWorkspaces?: boolean;
+}
+
 export interface PackageJson {
   name: string;
   version: string;
@@ -68,6 +110,38 @@ export interface PackageJson {
     [key: string]: any;
   };
   [key: string]: any;
+}
+
+export interface PackageLockJson {
+  name: string;
+  version: string;
+  lockfileVersion: number;
+  requires?: boolean;
+  packages: {
+    [key: string]: PackageLockDependency;
+  };
+  dependencies?: {
+    [key: string]: PackageLockDependency;
+  };
+  devDependencies?: {
+    [key: string]: PackageLockDependency;
+  };
+  optionalDependencies?: {
+    [key: string]: PackageLockDependency;
+  };
+}
+
+export interface PackageLockDependency {
+  version: string;
+  resolved: string;
+  integrity?: string;
+  dev?: boolean;
+  requires?: {
+    [key: string]: string;
+  };
+  dependencies?: {
+    [key: string]: PackageLockDependency;
+  };
 }
 
 export interface TSConfigJson {

@@ -2,9 +2,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false // disabled for typeorm support
   },
   "include": [
     "./src/**/*"

@@ -18,7 +18,7 @@ import { CommandModel } from "./commands/model.js";
 
 async function readPackageJson() {
   const fileContent = await fs.readFile(resolve(__dirname, "../", "./package.json"), "utf-8");
-  const packageJson = JSON.parse(fileContent);
+  const packageJson = JSON.parse(fileContent) as { version: string };
   return packageJson;
 }
 
@@ -55,13 +55,18 @@ void readPackageJson().then((packageJson) => {
     )
     .option("-d, --directory <directory>", "Output directory for generated code")
     .action(async (objective: string, destfile: string | undefined, options) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { language, editableReferenceFiles, referenceFiles, directory } = options;
       await genCode({
         objective,
         destfile,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         directory,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         language,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         editableReferenceFiles,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         referenceFiles,
       });
     });
@@ -79,6 +84,7 @@ void readPackageJson().then((packageJson) => {
       await genImage({
         prompt,
         destfile,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         size: options.size,
       });
     });
@@ -88,7 +94,9 @@ void readPackageJson().then((packageJson) => {
     .description("Lists commands to complete the objective")
     .option("-e, --execute", "Execute the commands")
     .action(async (objective, options) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const execute = options.execute;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await listCommands(objective, execute);
     });
 

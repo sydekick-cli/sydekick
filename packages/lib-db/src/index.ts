@@ -1,7 +1,7 @@
 import { AppDataSource } from "./data-source.js";
 
 AppDataSource.initialize()
-  .then(async () => {
-    console.log("Inserting a new user into the database...");
+  .then(() => {
+    // todo: impl
   })
   .catch((error) => console.log(error));

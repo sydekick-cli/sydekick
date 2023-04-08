@@ -23,10 +23,12 @@ export class AiModelManager {
   public async listModels(): Promise<void> {
     // todo: use updatable list
     const providersMetadata = this._aiPlatformProviderManager.builtInAiPlatformProviders;
-    for (const [name, providerMetadata] of Object.entries(providersMetadata).filter(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for (const [_name, providerMetadata] of Object.entries(providersMetadata).filter(
       (p) => p[1].installed && p[1].enabled
     )) {
-      const provider = await providerMetadata.factory.createProvider();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const _provider = await providerMetadata.factory.createProvider();
       // const models = provider.
       // for (const model of models) {
       //   this._models.push(model);

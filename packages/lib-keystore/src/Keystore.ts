@@ -1,5 +1,6 @@
-import keytar from "keytar";
+import { formatError } from "@sydekick/lib-util";
 import debugLog from "debug";
+import keytar from "keytar";
 
 export class Keystore {
   public static getInstance(serviceName = "sydekick"): Keystore {
@@ -25,7 +26,7 @@ export class Keystore {
     try {
       success = await keytar.deletePassword(this._serviceName, keyName);
     } catch (error) {
-      debug(`Error deleting key ${keyName}: ${error}`);
+      debug(`Error deleting key ${keyName}: ${formatError(error)}`);
     }
     if (!success) {
       debug(`Key ${keyName} not found.`);
@@ -47,7 +48,7 @@ export class Keystore {
     try {
       key = await keytar.getPassword(this._serviceName, keyName);
     } catch (error) {
-      debug(`Error getting key ${keyName}: ${error}`);
+      debug(`Error getting key ${keyName}: ${formatError(error)}`);
     }
     if (!key) {
       debug(`Key ${keyName} not found.`);
@@ -65,7 +66,7 @@ export class Keystore {
   public async hasKey(keyName: string): Promise<boolean> {
     const debug = debugLog("@sydekick/lib-keystore:hasKey");
     debug(`Checking if key ${keyName} exists...`);
-    const key = this.getKey(keyName);
+    const key = await this.getKey(keyName);
     if (!key) {
       debug(`Key ${keyName} not found.`);
       return false;
@@ -87,7 +88,7 @@ export class Keystore {
     try {
       await keytar.setPassword(this._serviceName, keyName, keyValue);
     } catch (error) {
-      debug(`Error storing key ${keyName}: ${error}`);
+      debug(`Error storing key ${keyName}: ${formatError(error)}`);
       return false;
     }
     debug(`Key ${keyName} stored.`);

@@ -1,7 +1,7 @@
-import { IAiChatCompletionProvider, IAiModelMetadata, IChatMessage } from "@sydekick/lib-ai";
-import { GPT4AllModelProvider } from "./Gpt4AllModelProvider.js";
-import { GPT4All } from "gpt4all";
+import { IAiChatCompletionProvider, IChatMessage } from "@sydekick/lib-ai";
 import debugLog from "debug";
+
+import { GPT4AllModelProvider } from "./Gpt4AllModelProvider.js";
 
 export class Gpt4AllChatCompletionProvider
   extends GPT4AllModelProvider

@@ -24,9 +24,6 @@ export async function explain(command: string) {
   console.log("Let me think...");
   chatSession.chatAsRole("user", command);
   const response = await chatSession.executeSession();
-  const responseContent =
-    // @ts-ignore
-    response.data.choices[0].message.content;
-
+  const responseContent = response[0].content;
   console.log(responseContent);
 }

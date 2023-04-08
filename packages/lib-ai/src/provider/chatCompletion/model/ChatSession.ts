@@ -46,7 +46,9 @@ export class ChatSession {
       !SYSTEM_PROGRAMMING_PROMPT_EXPECTED_RESPONSE.test(programmingResponseContent)
     ) {
       console.error(
-        `Expected the response to be a variation of "yes" but got "${programmingResponseContent}"`
+        `Expected the response to be a variation of "yes" but got "${
+          programmingResponseContent ?? "undefined"
+        }"`
       );
       process.exit(1);
     }

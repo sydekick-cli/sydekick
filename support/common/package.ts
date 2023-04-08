@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs/promises";
 import { PackageJson } from "./ICommon";
 import debugLog from "debug";
+import { formatError } from "./util";
 
 /**
  * Reads the contents of a package.json file and returns a PackageJson object.
@@ -22,9 +23,7 @@ export async function readPackageJson(packageJsonPath: string): Promise<PackageJ
     debug(packageJson);
     return packageJson;
   } catch (error) {
-    const errorMessage = `Error reading ${packageJsonPath}: ${
-      error instanceof Error ? error.message : error
-    }`;
+    const errorMessage = `Error reading ${packageJsonPath}: ${formatError(error)}`;
     console.error(errorMessage);
     debug(errorMessage);
 
@@ -51,7 +50,10 @@ export async function writePackageJson(
   Object.keys(updatedContent.dependencies || {})
     .sort()
     .forEach((key) => {
-      sortedDependencies[key] = updatedContent.dependencies![key];
+      if (!updatedContent.dependencies) {
+        updatedContent.dependencies = {};
+      }
+      sortedDependencies[key] = updatedContent.dependencies[key];
     });
   updatedContent.dependencies = sortedDependencies;
   try {
@@ -61,9 +63,7 @@ export async function writePackageJson(
     debug(updatedContent);
     return true;
   } catch (error) {
-    const errorMessage = `Error updating package.json: ${
-      error instanceof Error ? error.message : error
-    }`;
+    const errorMessage = `Error updating package.json: ${formatError(error)}`;
     console.error(errorMessage);
     debug(errorMessage);
 

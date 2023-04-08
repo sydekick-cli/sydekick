@@ -1,6 +1,6 @@
 import { IAiChatCompletionProvider, IChatMessage } from "@sydekick/lib-ai";
 import { OpenAiModelProvider } from "../OpenAiModelProvider.js";
-import { OpenAIApi } from "openai";
+import { ChatCompletionRequestMessageRoleEnum, OpenAIApi } from "openai";
 import debugLog from "debug";
 
 export class OpenAiChatCompletionProvider
@@ -27,8 +27,10 @@ export class OpenAiChatCompletionProvider
     try {
       response = await this._openai.createChatCompletion({
         model: this.chatCompletionModelName,
-        // @ts-ignore
-        messages: chatMessages,
+        messages: chatMessages.map((message) => ({
+          content: message.content,
+          role: message.role as ChatCompletionRequestMessageRoleEnum,
+        })),
         n: 1, // todo: allow multiple responses
       });
     } catch (error) {

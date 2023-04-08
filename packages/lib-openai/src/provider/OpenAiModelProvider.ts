@@ -4,10 +4,10 @@ import debugLog from "debug";
 
 export class OpenAiModelProvider implements IAiModelProvider {
   constructor(protected readonly _openai: OpenAIApi) {}
-  install(modelName: string, force?: boolean | undefined): Promise<undefined> {
+  install(_modelName: string, _force?: boolean | undefined): Promise<undefined> {
     return Promise.resolve(undefined); // openai models are always considered installed (aka available) since they are in the cloud
   }
-  uninstall(modelName: string): Promise<undefined> {
+  uninstall(_modelName: string): Promise<undefined> {
     return Promise.resolve(undefined); // openai models are always considered installed (aka available) since they are in the cloud so it can't be uninstalled
   }
 

@@ -4,7 +4,8 @@ import path, { dirname, resolve } from "path";
 import { PackageJson, TSConfigJson, TypeScriptProject } from "./ICommon";
 import { writePackageJson } from "./package";
 import glob from "glob";
-import { Project, SyntaxKind } from "ts-morph";
+import { Project } from "ts-morph";
+import { formatError } from "./util";
 
 // todo: will also have to add a layer to this to ensure that all versions of @sydekick/* are the same
 /**
@@ -17,10 +18,10 @@ import { Project, SyntaxKind } from "ts-morph";
  * @returns A Promise that resolves when the validation is complete.
  * @throws An error if an import path is not included in the package.json file.
  */
-export async function validateSydekickImports(
+export function validateSydekickImports(
   project: TypeScriptProject,
   otherProjects: Record<string, TypeScriptProject>
-): Promise<void> {
+): void {
   const debug = debugLog("@sydekick/support/common/typescript:validateSydekickImports");
   debug(`Validating Sydekick imports for ${project.name}`);
   const tsconfigRootDir = project.tsconfig.compilerOptions?.rootDir || ".";
@@ -115,8 +116,11 @@ export async function validateSydekickImports(
   if (missingPackageJsonDependencies.length > 0) {
     debug(`Adding ${missingPackageJsonDependencies.length} missing package.json dependencies`);
     for (const { name, version } of missingPackageJsonDependencies) {
+      if (!project.packageJson.dependencies) {
+        project.packageJson.dependencies = {};
+      }
       console.log(`Adding dependency: ${name}@${version}`);
-      project.packageJson.dependencies![name] = version;
+      project.packageJson.dependencies[name] = version;
     }
   } else {
     console.log(`${project.name} has all required dependencies.`);
@@ -134,7 +138,7 @@ export async function saveTypeScriptProject(project: TypeScriptProject): Promise
   debug("Saving TypeScript project:", project);
   try {
     // Write the updated package.json file
-    writePackageJson(project.packageJsonPath, project.packageJson);
+    await writePackageJson(project.packageJsonPath, project.packageJson);
 
     // ensure references are unique
     project.tsconfig.references = project.tsconfig.references?.filter(
@@ -148,9 +152,7 @@ export async function saveTypeScriptProject(project: TypeScriptProject): Promise
 
     return true;
   } catch (error) {
-    console.error(
-      `Error saving TypeScript project: ${error instanceof Error ? error.message : error}`
-    );
+    console.error(`Error saving TypeScript project: ${formatError(error)}`);
     return false;
   }
 }

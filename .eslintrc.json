@@ -12,7 +12,12 @@
     "prettier"
   ],
   "rules": {
-    // Add your custom rules here
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ]
   },
   "overrides": [
     {

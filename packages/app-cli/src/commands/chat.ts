@@ -31,7 +31,7 @@ class CommandChatListSubjects extends CliCommand<undefined> {
     // }
     process.exit(0);
   }
-  public parseArgs<T extends any[]>(...args: T): undefined {
+  public parseArgs<T extends unknown[]>(..._args: T): undefined {
     return undefined;
   }
 }
@@ -42,7 +42,7 @@ class CommandChatDeleteSubject extends CliCommand<{ subject: string }> {
   protected _buildCommanderCommand(program: CommanderCommand): CommanderCommand {
     return program.command("delete <subject>").description("Delete a previous subject");
   }
-  public run(options: { subject: string }): Promise<void> {
+  public run(_options: { subject: string }): Promise<void> {
     // todo: implement this
     // delete the subject
     // const result = db.prepare(`DELETE FROM chat_history WHERE subject = ?`).run(deleteSubject);
@@ -53,8 +53,8 @@ class CommandChatDeleteSubject extends CliCommand<{ subject: string }> {
     // }
     process.exit(0);
   }
-  public parseArgs<T extends any[]>(...args: T): { subject: string } {
-    return { subject: args[0] };
+  public parseArgs<T extends unknown[]>(...args: T): { subject: string } {
+    return { subject: args[0] as string };
   }
 }
 
@@ -67,7 +67,7 @@ async function initializeChatSession(): Promise<ChatSession> {
   return new ChatSession(chatCompletionProvider);
 }
 
-async function commonChat(chatSession: ChatSession, previousSubject?: string) {
+async function commonChat(chatSession: ChatSession, _previousSubject?: string) {
   // start the chat session
   console.log("Starting chat session... Type 'exit' to exit.");
   // eslint-disable-next-line no-constant-condition
@@ -103,8 +103,8 @@ class CommandChatNew extends CliCommand<{ subject?: string }> {
     const chatSession = await initializeChatSession();
     await commonChat(chatSession, options.subject);
   }
-  public parseArgs<T extends any[]>(...args: T): { subject?: string | undefined } {
-    return { subject: args[0] };
+  public parseArgs<T extends unknown[]>(...args: T): { subject?: string | undefined } {
+    return { subject: args[0] as string };
   }
 }
 
@@ -138,8 +138,8 @@ class CommandChatResume extends CliCommand<{ subject: string }> {
     //   }
     await commonChat(chatSession, options.subject);
   }
-  public parseArgs<T extends any[]>(...args: T): { subject: string } {
-    return { subject: args[0] };
+  public parseArgs<T extends unknown[]>(...args: T): { subject: string } {
+    return { subject: args[0] as string };
   }
 }
 
@@ -159,11 +159,12 @@ export class CommandChat extends CliCommand<undefined> {
     // api routes:
     // GET /chat // empty {} response
   }
-  public async run(options: undefined): Promise<void> {
+  public run(_options: undefined): Promise<void> {
     this._commanderCommand?.outputHelp();
+    return Promise.resolve();
   }
 
-  public parseArgs<T extends any[]>(...args: T): undefined {
+  public parseArgs<T extends unknown[]>(..._args: T): undefined {
     return undefined;
   }
 }

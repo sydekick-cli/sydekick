@@ -45,7 +45,7 @@ export class OpenAiImageCreationProvider implements IImageCreationProvider {
 
     return path;
   }
-  createImageStream(options: ImageCreationOptions): Promise<Stream> {
+  createImageStream(_options: ImageCreationOptions): Promise<Stream> {
     throw new Error("Method not implemented.");
   }
 }

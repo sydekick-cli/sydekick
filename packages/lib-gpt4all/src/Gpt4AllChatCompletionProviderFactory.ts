@@ -5,7 +5,7 @@ import { Gpt4AllChatCompletionProvider } from "./Gpt4AllChatCompletionProvider.j
 export class Gpt4AllChatCompletionProviderFactory
   implements IAiChatCompletionProviderFactory<Gpt4AllChatCompletionProvider>
 {
-  async createProvider(): Promise<Gpt4AllChatCompletionProvider> {
-    return new Gpt4AllChatCompletionProvider();
+  createProvider(): Promise<Gpt4AllChatCompletionProvider> {
+    return Promise.resolve(new Gpt4AllChatCompletionProvider());
   }
 }

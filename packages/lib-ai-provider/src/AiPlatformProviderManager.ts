@@ -75,26 +75,27 @@ export class AiPlatformProviderManager {
     return new OpenAiImageCreationProviderFactory();
   }
 
-  public async getIsInstalled(id: string): Promise<boolean> {
+  public getIsInstalled(id: string): Promise<boolean> {
     const debug = debugLog("@sydekick/lib-ai-provider:AiPlatformProviderManager::getIsInstalled");
     debug(`id: ${id}`);
     if (id === "openai") {
       debug(`returning true for openai`);
-      return true;
+      return Promise.resolve(true);
     }
     const platform = this.builtInAiPlatformProviders[id];
     if (!platform) {
       throw new Error(`Unknown AI platform: ${id}`);
     }
-    debug(`returning ${platform.installed}`);
-    return platform.installed;
+    debug(`returning ${platform.installed ? "true" : "false"}`);
+    return Promise.resolve(platform.installed);
   }
 
-  public async installProvider(id: string, force: boolean): Promise<void> {
+  public async installProvider(id: string, _force: boolean): Promise<void> {
     const providerMetadata = this.builtInAiPlatformProviders[id];
     if (!providerMetadata) {
       throw new Error(`Unknown AI platform: ${id}`);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const provider = await providerMetadata.factory.createProvider();
     // todo: provider.install(force);
   }

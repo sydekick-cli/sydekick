@@ -1,7 +1,8 @@
 import * as fs from "fs";
 import * as path from "path";
+import { LernaJson, PackageJson, PackageLockJson } from "../common/ICommon";
 
-const ensureVersions = async () => {
+const ensureVersions = () => {
   const lernaJSONPath = path.resolve(process.cwd(), "lerna.json");
   const packagesDir = path.resolve(process.cwd(), "packages");
 
@@ -10,7 +11,7 @@ const ensureVersions = async () => {
     process.exit(1);
   }
 
-  const lernaJSON = JSON.parse(fs.readFileSync(lernaJSONPath, "utf-8"));
+  const lernaJSON = JSON.parse(fs.readFileSync(lernaJSONPath, "utf-8")) as LernaJson;
   const lernaVersion = lernaJSON.version;
 
   const packageDirs = fs.readdirSync(packagesDir).filter((file) => {
@@ -22,8 +23,10 @@ const ensureVersions = async () => {
     const packageLockJSONPath = path.join(packagesDir, packageDir, "package-lock.json");
 
     if (fs.existsSync(packageJSONPath) && fs.existsSync(packageLockJSONPath)) {
-      const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf-8"));
-      const packageLockJSON = JSON.parse(fs.readFileSync(packageLockJSONPath, "utf-8"));
+      const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf-8")) as PackageJson;
+      const packageLockJSON = JSON.parse(
+        fs.readFileSync(packageLockJSONPath, "utf-8")
+      ) as PackageLockJson;
 
       if (packageJSON.version !== lernaVersion || packageLockJSON.version !== lernaVersion) {
         console.error(
