@@ -8,7 +8,7 @@
   },
   "include": [
     "./src/**/*"
-, "data-source.ts"  ],
+  ],
   "exclude": [
     "./node_modules",
     "./dist",
