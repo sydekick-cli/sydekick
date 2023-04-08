@@ -13,7 +13,8 @@ import { CommandChat } from "./commands/chat.js";
 import { genImage } from "./commands/gen-image.js";
 import fs from "fs/promises";
 import { CliCommand } from "./commands/CliCommand.js";
-import { CommandProvider } from "./commands/provider.js";
+import { CommandPlatform } from "./commands/platform.js";
+import { CommandModel } from "./commands/model.js";
 
 async function readPackageJson() {
   const fileContent = await fs.readFile(resolve(__dirname, "../", "./package.json"), "utf-8");
@@ -21,7 +22,7 @@ async function readPackageJson() {
   return packageJson;
 }
 
-const commands: CliCommand[] = [new CommandChat(), new CommandProvider()];
+const commands: CliCommand[] = [new CommandChat(), new CommandPlatform(), new CommandModel()];
 
 void readPackageJson().then((packageJson) => {
   const program = new CommanderCommand();

@@ -1,6 +1,7 @@
 // todo: this should probably be a typeorm object
 // todo: will need a mapper type to map from typeorm to and from this type
 
+import { IAiPlatform } from "./IAiPlatform.js";
 import { IAiProviderFactoryMetadata } from "./IAiProviderFactoryMetadata.js";
 import {
   IAiChatCompletionProvider,
@@ -11,15 +12,7 @@ import {
 /**
  * An ai provider is a service that provides ai models.
  */
-export interface IAiPlatformProvider {
-  /**
-   * The name of the ai provider.
-   */
-  readonly name: string;
-  /**
-   * A description of the ai provider.
-   */
-  readonly description: string;
+export interface IAiPlatformProvider extends IAiPlatform {
   /**
    * Get the ai completion provider factory metadata.
    * @returns - The ai completion provider factory metadata or undefined if the ai provider does not provide ai completion.

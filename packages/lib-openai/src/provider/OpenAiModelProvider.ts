@@ -4,11 +4,11 @@ import debugLog from "debug";
 
 export class OpenAiModelProvider implements IAiModelProvider {
   constructor(protected readonly _openai: OpenAIApi) {}
-  install(modelName: string, force?: boolean | undefined): Promise<void> {
-    return Promise.resolve(); // openai models are always considered installed (aka available) since they are in the cloud
+  install(modelName: string, force?: boolean | undefined): Promise<undefined> {
+    return Promise.resolve(undefined); // openai models are always considered installed (aka available) since they are in the cloud
   }
-  uninstall(modelName: string): Promise<void> {
-    return Promise.resolve(); // openai models are always considered installed (aka available) since they are in the cloud so it can't be uninstalled
+  uninstall(modelName: string): Promise<undefined> {
+    return Promise.resolve(undefined); // openai models are always considered installed (aka available) since they are in the cloud so it can't be uninstalled
   }
 
   initialize(): Promise<void> {
@@ -37,7 +37,8 @@ export class OpenAiModelProvider implements IAiModelProvider {
       installed: true, // openai models are always considered installed (aka available) since they are in the cloud
     }));
     debug(JSON.stringify(models));
-    return models;
+    // return models;
+    throw new Error("Method not implemented.");
   }
 
   /**

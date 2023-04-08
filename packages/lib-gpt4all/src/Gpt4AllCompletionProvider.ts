@@ -1,6 +1,7 @@
-import { IAiCompletionProvider, IAiModelMetadata } from "@sydekick/lib-ai";
-import { GPT4AllModelProvider } from "./Gpt4AllModelProvider.js";
+import { IAiCompletionProvider } from "@sydekick/lib-ai";
 import debugLog from "debug";
+
+import { GPT4AllModelProvider } from "./Gpt4AllModelProvider.js";
 
 export class Gpt4AllCompletionProvider
   extends GPT4AllModelProvider
@@ -8,10 +9,10 @@ export class Gpt4AllCompletionProvider
 {
   private _chatCompletionModelName: string = "gpt4all-lora-quantized";
 
-  get chatCompletionModelName(): string {
+  get completionModelName(): string {
     return this._chatCompletionModelName;
   }
-  set chatCompletionModelName(modelName: string) {
+  set completionModelName(modelName: string) {
     this._chatCompletionModelName = modelName;
   }
 

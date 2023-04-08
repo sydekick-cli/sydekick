@@ -9,6 +9,12 @@ import { OpenAiModelProvider } from "./OpenAiModelProvider.js";
 import { OpenAiChatCompletionProviderFactory, OpenAiCompletionProviderFactory } from "./index.js";
 
 export class OpenAiPlatformProvider extends OpenAiModelProvider implements IAiPlatformProvider {
+  // todo: these will be populated by the db
+  id: string = "openai";
+  builtin: boolean = true;
+  installed: boolean = true;
+  enabled: boolean = true;
+
   get aiCompletionProviderFactoryMetadata():
     | IAiProviderFactoryMetadata<IAiCompletionProvider>
     | undefined {

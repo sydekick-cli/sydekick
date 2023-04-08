@@ -1,7 +1,8 @@
 {
-  "name": "@sydekick/lib-db",
+  "name": "@sydekick/lib-db-preferences",
   "version": "1.0.0-alpha.3",
   "description": "",
+  "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "private": false,
@@ -18,6 +19,7 @@
   "keywords": [],
   "license": "MIT",
   "dependencies": {
+    "@sydekick/lib-ai": "1.0.0-alpha.3",
     "debug": "^4.3.4",
     "pg": "^8.4.0",
     "reflect-metadata": "^0.1.13",
@@ -43,6 +45,5 @@
   "bugs": {
     "url": "https://github.com/feedmefries/sidekick/issues"
   },
-  "homepage": "https://github.com/feedmefries/sidekick#readme",
-  "type": "module"
+  "homepage": "https://github.com/feedmefries/sidekick#readme"
 }

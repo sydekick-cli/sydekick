@@ -29,6 +29,9 @@
     },
     {
       "path": "packages/lib-service"
+    },
+    {
+      "path": "packages/lib-db-preferences"
     }
   ],
   "exclude": [
