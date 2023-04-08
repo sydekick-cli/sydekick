@@ -11,5 +11,10 @@
     "./node_modules",
     "./dist",
     "*.cjs"
+  ],
+  "references": [
+    {
+      "path": "../lib-util"
+    }
   ]
 }
