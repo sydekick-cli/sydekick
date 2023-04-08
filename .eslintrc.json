@@ -1,0 +1,47 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "prettier"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "prettier"
+  ],
+  "rules": {
+    // Add your custom rules here
+  },
+  "overrides": [
+    {
+      "files": [
+        "packages/**/*.ts"
+      ],
+      "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "project": [
+          "./packages/*/tsconfig.json"
+        ],
+        "tsconfigRootDir": ".",
+        "warnOnUnsupportedTypeScriptVersion": true
+      }
+    },
+    {
+      "files": [
+        "support/**/*.ts"
+      ],
+      "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "project": [
+          "./tsconfig.json"
+        ],
+        "tsconfigRootDir": "./support",
+        "warnOnUnsupportedTypeScriptVersion": true
+      }
+    }
+  ]
+}
