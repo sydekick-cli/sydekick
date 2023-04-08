@@ -35,7 +35,7 @@ export class ChatSession {
     return this._chatHistory.slice(-1).pop();
   }
 
-  public async programChat(prompt: string, systemRole = "system", userRole = "user") {
+  public async programChat(prompt: string, systemRole = "system", _userRole = "user") {
     this.chatAsRole(systemRole, prompt);
 
     await this.executeSession();

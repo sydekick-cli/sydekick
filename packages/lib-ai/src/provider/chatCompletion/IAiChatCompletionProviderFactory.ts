@@ -1,8 +1,6 @@
 import { IAiProviderFactory } from "../IAiProviderFactory.js";
 import { IAiChatCompletionProvider } from "./IAiChatCompletionProvider.js";
 
-export interface IAiChatCompletionProviderFactory<
+export type IAiChatCompletionProviderFactory<
   Provider extends IAiChatCompletionProvider = IAiChatCompletionProvider
-> extends IAiProviderFactory<Provider> {
-  // empty
-}
+> = IAiProviderFactory<Provider>;

@@ -24,7 +24,7 @@ export class GPT4AllPlatformProvider extends GPT4AllModelProvider implements IAi
   public readonly name: string = "gpt4all";
   public readonly description: string = "GPT4All Provider";
   public readonly builtin: boolean = true;
-  public installed: boolean = false;
+  public installed = false;
   public readonly enabled: boolean = true;
 
   get aiCompletionProviderFactoryMetadata():

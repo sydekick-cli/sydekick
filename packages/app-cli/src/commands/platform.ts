@@ -131,7 +131,7 @@ class CommandPlatformInstall extends CliCommand<PlatformInstallOptions> {
   }
 }
 
-export class CommandPlatform extends CliCommand {
+export class CommandPlatform extends CliCommand<undefined> {
   constructor() {
     super();
     this.addSubCommand(new CommandPlatformList());
@@ -141,10 +141,10 @@ export class CommandPlatform extends CliCommand {
   protected _buildCommanderCommand(program: Command): Command {
     return program.command("platform").description("Manage Sidekick ai platforms.");
   }
-  public async run(options: any): Promise<void> {
+  public async run(options: undefined): Promise<void> {
     this._commanderCommand?.outputHelp();
   }
-  public parseArgs<T extends any[]>(...args: T) {
-    return {};
+  public parseArgs<T extends unknown[]>(...args: T) {
+    return undefined;
   }
 }

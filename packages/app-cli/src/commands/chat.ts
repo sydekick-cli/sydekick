@@ -10,14 +10,14 @@ export type ChatOptions = {
   delete?: string;
 };
 
-class CommandChatListSubjects extends CliCommand<{}> {
+class CommandChatListSubjects extends CliCommand<undefined> {
   // api route:
   // GET /chat/subjects // list previous subjects (i.e 'sydekick chat list')
 
   protected _buildCommanderCommand(program: CommanderCommand): CommanderCommand {
     return program.command("list").description("List previous subjects");
   }
-  public run(_options: {}): Promise<void> {
+  public run(_options: undefined): Promise<void> {
     // todo: implement this
     // list all subjects
     // const subjects = db.prepare(`SELECT DISTINCT subject FROM chat_history`).all();
@@ -31,8 +31,8 @@ class CommandChatListSubjects extends CliCommand<{}> {
     // }
     process.exit(0);
   }
-  public parseArgs<T extends any[]>(...args: T): {} {
-    return {};
+  public parseArgs<T extends any[]>(...args: T): undefined {
+    return undefined;
   }
 }
 
@@ -143,7 +143,7 @@ class CommandChatResume extends CliCommand<{ subject: string }> {
   }
 }
 
-export class CommandChat extends CliCommand<{}> {
+export class CommandChat extends CliCommand<undefined> {
   constructor() {
     super();
     this._subCommands.push(
@@ -159,11 +159,11 @@ export class CommandChat extends CliCommand<{}> {
     // api routes:
     // GET /chat // empty {} response
   }
-  public async run(options: {}): Promise<void> {
+  public async run(options: undefined): Promise<void> {
     this._commanderCommand?.outputHelp();
   }
 
-  public parseArgs<T extends any[]>(...args: T): {} {
-    return {};
+  public parseArgs<T extends any[]>(...args: T): undefined {
+    return undefined;
   }
 }

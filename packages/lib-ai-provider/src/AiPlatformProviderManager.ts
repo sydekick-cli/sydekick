@@ -52,7 +52,6 @@ export class AiPlatformProviderManager {
   };
 
   // todo: need an init fn to async load all providers
-  constructor() {}
 
   public get builtInAiPlatformProviders(): {
     [key: string]: IAiProviderFactoryMetadata<IAiPlatformProvider>;

@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import debugLog from "debug";
 
-export abstract class CliCommand<Options = any> {
+export abstract class CliCommand<Options = unknown> {
   protected abstract _buildCommanderCommand(program: Command): Command;
   protected readonly _subCommands: CliCommand[] = [];
   protected _commanderCommand?: Command;
@@ -40,5 +40,5 @@ export abstract class CliCommand<Options = any> {
    * @param args - the arguments passed to the command.
    * @returns - the options for the command.
    */
-  public abstract parseArgs<T extends any[]>(...args: T): Options;
+  public abstract parseArgs<T extends unknown[]>(...args: T): Options;
 }

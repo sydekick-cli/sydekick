@@ -10,10 +10,10 @@ import { OpenAiChatCompletionProviderFactory, OpenAiCompletionProviderFactory } 
 
 export class OpenAiPlatformProvider extends OpenAiModelProvider implements IAiPlatformProvider {
   // todo: these will be populated by the db
-  id: string = "openai";
-  builtin: boolean = true;
-  installed: boolean = true;
-  enabled: boolean = true;
+  id = "openai";
+  builtin = true;
+  installed = true;
+  enabled = true;
 
   get aiCompletionProviderFactoryMetadata():
     | IAiProviderFactoryMetadata<IAiCompletionProvider>

@@ -4,7 +4,7 @@ import { OpenAIApi } from "openai";
 import debugLog from "debug";
 
 export class OpenAiCompletionProvider extends OpenAiModelProvider implements IAiCompletionProvider {
-  private _chatCompletionModelName: string = "gpt-3.5-turbo";
+  private _chatCompletionModelName = "gpt-3.5-turbo";
   get completionModelName(): string {
     return this._chatCompletionModelName;
   }

@@ -7,7 +7,7 @@ export class Gpt4AllChatCompletionProvider
   extends GPT4AllModelProvider
   implements IAiChatCompletionProvider
 {
-  private _chatCompletionModelName: string = "gpt4all-lora-quantized";
+  private _chatCompletionModelName = "gpt4all-lora-quantized";
 
   public get chatCompletionModelName(): string {
     return this._chatCompletionModelName;
