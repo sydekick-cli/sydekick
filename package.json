@@ -3,13 +3,23 @@
   "version": "1.0.0-alpha.3",
   "description": "",
   "private": true,
+  "type": "commonjs",
   "scripts": {
-    "bootstrap": "npm install && npm run build:tsc:support && npm run build:ensure-projects && lerna bootstrap && npm run build && npm run link",
+    "bootstrap": "npm install && npm-run-all -s -l bootstrap:*",
+    "bootstrap:1": "npm run build:tsc:support",
+    "bootstrap:2": "npm run build:ensure-projects",
+    "bootstrap:3": "lerna bootstrap",
+    "bootstrap:4": "npm run build",
+    "bootstrap:5": "npm run link",
     "build": "npm run build:tsc && npm run build:lerna",
     "build:tsc": "tsc -b -v",
     "build:tsc:support": "tsc -p ./support/tsconfig.json",
     "build:ensure-projects": "node ./support/.dist/build/ensure-projects.js",
     "build:lerna": "lerna run build",
+    "check": "npm-run-all -c -p -l --aggregate-output check:*",
+    "check:build": "npm run build",
+    "check:lint": "npm run lint",
+    "check:tests": "exit 0",
     "clean-all": "npm run clean-build && npm run clean-node-modules",
     "clean-build": "rimraf packages/*/dist; rimraf packages/**/*.tsbuildinfo",
     "clean-node-modules": "rimraf packages/**/node_modules; rimraf node_modules",
@@ -20,9 +30,9 @@
     "dev:build:tsc:support": "tsc -p ./support/tsconfig.json -w",
     "link": "cd packages/app-cli; npm link; cd ../../",
     "lint": "eslint .",
+    "prepare": "husky install",
     "publish": "lerna publish from-package --yes",
-    "refresh": "npm run clean-all && npm run bootstrap",
-    "prepare": "husky install"
+    "refresh": "npm run clean-all && npm run bootstrap"
   },
   "keywords": [],
   "license": "MIT",
@@ -45,7 +55,7 @@
     "rimraf": "^4.4.1",
     "ts-morph": "^18.0.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.3"
+    "typescript": "^5.0.4"
   },
   "workspaces": [
     "packages/*"
