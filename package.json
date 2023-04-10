@@ -3,7 +3,6 @@
   "version": "1.0.0-alpha.3",
   "description": "",
   "private": true,
-  "type": "commonjs",
   "scripts": {
     "bootstrap": "npm install && npm-run-all -s -l bootstrap:*",
     "bootstrap:1": "npm run build:tsc:support",
