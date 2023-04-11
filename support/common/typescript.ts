@@ -3,7 +3,7 @@ import fs from "fs/promises";
 import path, { dirname, resolve } from "path";
 import { PackageJson, TSConfigJson, TypeScriptProject } from "./ICommon";
 import { writePackageJson } from "./package";
-import glob from "glob";
+import * as glob from "glob";
 import { Project } from "ts-morph";
 import { formatError } from "./util";
 
