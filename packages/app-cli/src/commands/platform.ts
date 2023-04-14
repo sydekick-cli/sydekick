@@ -1,4 +1,4 @@
-import { AiPlatformProviderManager } from "@sydekick/lib-ai-provider";
+import { AiPlatformProviderManager } from "@sydekick/lib-core";
 import { Command } from "commander";
 import debugLog from "debug";
 

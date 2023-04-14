@@ -1,9 +1,9 @@
 import path, { basename, dirname } from "path";
-import { ChatSession } from "@sydekick/lib-ai";
+import { ChatSession } from "@sydekick/lib-core";
 import { Prompt } from "../Prompt.js";
 import { readFile, writeFile } from "fs/promises";
 import { existsSync, mkdirSync } from "fs";
-import { AiPlatformProviderManager } from "@sydekick/lib-ai-provider";
+import { AiPlatformProviderManager } from "@sydekick/lib-core";
 
 export const FORMAT_DESCRIPTION = `
   <new files>

@@ -1,4 +1,4 @@
-import { IAiPlatform } from "@sydekick/lib-ai";
+import { IAiPlatform } from "@sydekick/lib-core";
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity("ai_platforms")

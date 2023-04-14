@@ -1,5 +1,5 @@
-import { ChatSession } from "@sydekick/lib-ai";
-import { AiPlatformProviderManager } from "@sydekick/lib-ai-provider";
+import { ChatSession } from "@sydekick/lib-core";
+import { AiPlatformProviderManager } from "@sydekick/lib-core";
 
 export const SYSTEM_PROGRAMMING_PROMPT = `
 You are an assistant that is an expert at explaining shell commands in plain english.

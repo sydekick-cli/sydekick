@@ -1,4 +1,4 @@
-import { IAiModelMetadata, IAiPlatform } from "@sydekick/lib-ai";
+import { IAiModelMetadata, IAiPlatform } from "@sydekick/lib-core";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { AiPlatform } from "./AiPlatform.entity.js";
 

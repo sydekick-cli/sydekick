@@ -1,31 +1,16 @@
 {
   "references": [
     {
-      "path": "packages/lib-util"
-    },
-    {
-      "path": "packages/lib-openai"
-    },
-    {
-      "path": "packages/lib-keystore"
-    },
-    {
-      "path": "packages/lib-gpt4all"
+      "path": "packages/lib-db-preferences"
     },
     {
       "path": "packages/lib-db"
     },
     {
-      "path": "packages/lib-ai-provider"
-    },
-    {
-      "path": "packages/lib-ai"
+      "path": "packages/lib-core"
     },
     {
       "path": "packages/app-cli"
-    },
-    {
-      "path": "packages/lib-db-preferences"
     }
   ],
   "exclude": [
