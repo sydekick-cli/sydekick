@@ -1,4 +1,4 @@
-import { IAiModelMetadata } from "@sydekick/lib-ai";
+import { IAiModelMetadata } from "@sydekick/lib-core";
 import { AiModelMetadata } from "./AiModelMetadata.entity.js";
 import { AiPlatformMapper } from "./AiPlatform.mapper.js";
 

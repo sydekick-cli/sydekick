@@ -1,38 +1,32 @@
 {
-  "name": "@sydekick/cli",
+  "name": "@sydekick/lib-core",
   "version": "1.0.0-alpha.3",
   "description": "",
-  "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "type": "module",
   "private": false,
-  "bin": {
-    "sydekick": "./dist/index.js"
-  },
   "files": [
     "dist"
   ],
   "scripts": {
     "dev": "tsc -w",
-    "link": "npm link",
     "start": "ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "license": "MIT",
   "dependencies": {
-    "@sydekick/lib-core": "1.0.0-alpha.3",
-    "commander": "^10.0.0",
     "debug": "^4.3.4",
-    "inquirer": "^9.1.5",
-    "os-info": "^1.0.0"
+    "gpt4all": "^1.0.0",
+    "keytar": "^7.9.0",
+    "openai": "^3.2.1"
   },
   "devDependencies": {
     "@types/debug": "^4.1.7",
-    "@types/inquirer": "^9.0.3",
     "@types/node": "^16.18.23",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.3"
+    "ts-node": "10.9.1",
+    "typescript": "5.0.4"
   },
   "author": "Seth Lessard <sethlessard@outlook.com>",
   "repository": {
@@ -43,7 +37,6 @@
     "url": "https://github.com/feedmefries/sidekick/issues"
   },
   "homepage": "https://github.com/feedmefries/sidekick#readme",
-  "gitHead": "5e9ff83dfc5b4737ecc9098d3164737b735f3606",
   "engines": {
     "node": ">=16"
   }

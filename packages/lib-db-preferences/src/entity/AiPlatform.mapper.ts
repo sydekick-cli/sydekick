@@ -1,6 +1,6 @@
 // aiPlatform.mapper.ts
 
-import { IAiPlatform } from "@sydekick/lib-ai";
+import { IAiPlatform } from "@sydekick/lib-core";
 import { AiPlatform } from "./AiPlatform.entity.js";
 
 export class AiPlatformMapper {

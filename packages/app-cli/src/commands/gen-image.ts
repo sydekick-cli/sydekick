@@ -1,4 +1,4 @@
-import { AiPlatformProviderManager } from "@sydekick/lib-ai-provider";
+import { AiPlatformProviderManager } from "@sydekick/lib-core";
 import { CreateImageRequestSizeEnum } from "openai";
 
 import { Prompt } from "../Prompt.js";

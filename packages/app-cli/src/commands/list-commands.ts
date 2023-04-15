@@ -1,7 +1,6 @@
-import { ChatSession } from "@sydekick/lib-ai";
 import { Executor } from "../Executor.js";
 import { Prompt } from "../Prompt.js";
-import { AiPlatformProviderManager } from "@sydekick/lib-ai-provider";
+import { AiPlatformProviderManager, ChatSession } from "@sydekick/lib-core";
 
 export const SYSTEM_PROGRAMMING_PROMPT = `
 You are a helpful assistant that suggests a list of shell commands the user can execute based on their objective.

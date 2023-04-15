@@ -1,8 +1,7 @@
-import { ChatSession } from "@sydekick/lib-ai";
+import { ChatSession, AiPlatformProviderManager } from "@sydekick/lib-core";
 import { Prompt } from "../Prompt.js";
 import { CliCommand } from "./CliCommand.js";
 import { Command as CommanderCommand } from "commander";
-import { AiPlatformProviderManager } from "@sydekick/lib-ai-provider";
 
 export type ChatOptions = {
   previousSubject?: string;

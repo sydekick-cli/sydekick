@@ -18,7 +18,7 @@
   "keywords": [],
   "license": "MIT",
   "dependencies": {
-    "@sydekick/lib-ai": "1.0.0-alpha.3",
+    "@sydekick/lib-core": "1.0.0-alpha.3",
     "debug": "^4.3.4",
     "pg": "^8.4.0",
     "reflect-metadata": "^0.1.13",
