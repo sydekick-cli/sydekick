@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.7",
-    "@types/node": "^16.18.23",
+    "@types/node": "^18.15.11",
     "ts-node": "10.9.1",
     "typescript": "5.0.4"
   },
